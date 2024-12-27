@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>General on Megacephalo Tech Blog</title>
+    <link>http://localhost:1313/categories/general/</link>
+    <description>Recent content in General on Megacephalo Tech Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 10 Dec 2024 13:02:16 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/general/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About me</title>
+      <link>http://localhost:1313/posts/about_me/</link>
+      <pubDate>Tue, 10 Dec 2024 13:02:16 +0800</pubDate>
+      <guid>http://localhost:1313/posts/about_me/</guid>
+      <description>&lt;p&gt;Hi everyone, this is Charly Huang and I am a software engineer interested in autonomous navigation related algorithms and software development. Since little I was fascinated by autonomous robots and this passion has since them motivated me to pursue more advanced degrees and careers in the related fields. As of today, there are still a great number of issues in the autonomous driving realm waiting to be overcome in order to make automated vehicles safe and reliable. To this end,I want to contribute head-on and hands-on to make autonomous driving a true reality in the near future.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
