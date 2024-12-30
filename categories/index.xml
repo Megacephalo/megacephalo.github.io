@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Megacephalo Tech Blog</title>
-    <link>http://localhost:1313/categories/</link>
+    <link>https://megacephalo.github.io/categories/</link>
     <description>Recent content in Categories on Megacephalo Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 27 Dec 2024 16:35:33 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://megacephalo.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Side-Projects</title>
-      <link>http://localhost:1313/categories/side-projects/</link>
+      <link>https://megacephalo.github.io/categories/side-projects/</link>
       <pubDate>Fri, 27 Dec 2024 16:35:33 +0800</pubDate>
-      <guid>http://localhost:1313/categories/side-projects/</guid>
+      <guid>https://megacephalo.github.io/categories/side-projects/</guid>
       <description></description>
     </item>
     <item>
       <title>Essential Knowledge</title>
-      <link>http://localhost:1313/categories/essential-knowledge/</link>
+      <link>https://megacephalo.github.io/categories/essential-knowledge/</link>
       <pubDate>Mon, 23 Dec 2024 18:23:08 +0800</pubDate>
-      <guid>http://localhost:1313/categories/essential-knowledge/</guid>
+      <guid>https://megacephalo.github.io/categories/essential-knowledge/</guid>
       <description></description>
     </item>
     <item>
       <title>General</title>
-      <link>http://localhost:1313/categories/general/</link>
+      <link>https://megacephalo.github.io/categories/general/</link>
       <pubDate>Tue, 10 Dec 2024 13:02:16 +0800</pubDate>
-      <guid>http://localhost:1313/categories/general/</guid>
+      <guid>https://megacephalo.github.io/categories/general/</guid>
       <description></description>
     </item>
   </channel>

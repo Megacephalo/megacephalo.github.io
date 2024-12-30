@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Robot Side-Project on Megacephalo Tech Blog</title>
-    <link>http://localhost:1313/tags/robot-side-project/</link>
+    <link>https://megacephalo.github.io/tags/robot-side-project/</link>
     <description>Recent content in Robot Side-Project on Megacephalo Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 27 Dec 2024 16:35:33 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/robot-side-project/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://megacephalo.github.io/tags/robot-side-project/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Sourcing the hardware components</title>
-      <link>http://localhost:1313/posts/project-robot-side-project/sourcing_the_hardware_components/</link>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/sourcing_the_hardware_components/</link>
       <pubDate>Fri, 27 Dec 2024 16:35:33 +0800</pubDate>
-      <guid>http://localhost:1313/posts/project-robot-side-project/sourcing_the_hardware_components/</guid>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/sourcing_the_hardware_components/</guid>
       <description>&lt;p&gt;To make my project a reality, I need to design and acquire the hardware to enable running the navigation algorithms and not solely relying on publicly available sensor datasets. Here are my concerns:&lt;/p&gt;&#xA;&lt;h1 id=&#34;functional-and-non-functional-requirements&#34;&gt;Functional and non-functional requirements&lt;/h1&gt;&#xA;&lt;p&gt;Since the project is about developing a robot capable of navigating irregular environments either indoor or outdoor, I would like to build a robust mobile platform that is sturdy enough to traverse through slightly sloped terrain while also having enough capacity to mount two to three sensors. More specifically, my functional requirements are the following:&lt;/p&gt;</description>
     </item>
     <item>
       <title>My robot side project</title>
-      <link>http://localhost:1313/posts/project-robot-side-project/my_side_project/</link>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/my_side_project/</link>
       <pubDate>Tue, 10 Dec 2024 13:02:16 +0800</pubDate>
-      <guid>http://localhost:1313/posts/project-robot-side-project/my_side_project/</guid>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/my_side_project/</guid>
       <description>&lt;p&gt;About a year and a half into my current profession, I began reflecting on how I could establish myself as a robotics professional—someone capable of understanding, designing, and developing complex projects that integrate autonomous navigation technologies into modern robots. At the same time, we are stepping into an era of rapid and transformative advancements in generative AI, where groundbreaking concepts and tools are being proposed at an unprecedented pace, revolutionizing the way we approach tasks.&lt;/p&gt;</description>
     </item>
   </channel>
