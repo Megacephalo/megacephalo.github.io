@@ -1,46 +1,60 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Megacephalo Tech Blog</title>
-    <link>https://megacephalo.github.io/posts/</link>
-    <description>Recent content in Posts on Megacephalo Tech Blog</description>
+    <title>Posts on Megacephalo&#39;s Tech Blog</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on Megacephalo&#39;s Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 27 Dec 2024 16:35:33 +0800</lastBuildDate>
-    <atom:link href="https://megacephalo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 31 Dec 2024 00:06:54 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sphero RVR&#43; setup part 2</title>
+      <link>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</link>
+      <pubDate>Tue, 31 Dec 2024 00:06:54 +0800</pubDate>
+      <guid>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</guid>
+      <description>&lt;p&gt;If you have not gone through the previous article &lt;a href=&#34;http://localhost:1313/posts/project-robot-side-project/sphero_rvr+_setup_part_1.md&#34;&gt;Sphero RVR+ setup part 1&lt;/a&gt;, please do so before proceeding with this one. But if you did, then you should have the hardware up and running and you are good to go with the software setup.&lt;/p&gt;&#xA;&lt;p&gt;Assuming you have installed the proper firmware and booted to Ubuntu 22.04 LTS. Congratulations! Now we are good to go to set up the necessary network settings and set up the ROS 2 Humble workspace to eventually create a Sphero RVR+ ROS 2 package driver.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Sphero RVR&#43; setup part 1</title>
+      <link>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_1/</link>
+      <pubDate>Mon, 30 Dec 2024 17:06:52 +0800</pubDate>
+      <guid>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_1/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s start with making sure that our rover can work as expected. Assume that you placed your order of a Sphero RVR+ and now it is delivered right to your doorstep. You unboxed the rover with all the excitement that has not appeared since you graduated from college. Now what?&lt;/p&gt;&#xA;&lt;h1 id=&#34;what-you-will-need&#34;&gt;What you will need&lt;/h1&gt;&#xA;&lt;p&gt;As you go through the rover&amp;rsquo;s getting started manual and check the items that come in the package: the programmable robot&amp;hellip;OK it is not broken, 1 large battery bar&amp;hellip;that goes in the robot you pressumed, 1 plastic key&amp;hellip;that&amp;rsquo;s to lock the battery in place in the slot in the middle of the chasis, 1 USB charging cable&amp;hellip;err that plugs directly to the battery and not the rover itself, 1 roll cage and 1 mounting plate&amp;hellip;you don&amp;rsquo;t need it for the rest of the ride, 1 blueprint&amp;hellip;this is the plate you think about mounting all the components on, 1 set of color cards&amp;hellip;you don&amp;rsquo;t need these as you won&amp;rsquo;t be using the color sensor locating down to the ground at the buttom of the chasis.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Sourcing the hardware components</title>
-      <link>https://megacephalo.github.io/posts/project-robot-side-project/sourcing_the_hardware_components/</link>
+      <link>http://localhost:1313/posts/project-robot-side-project/sourcing_the_hardware_components/</link>
       <pubDate>Fri, 27 Dec 2024 16:35:33 +0800</pubDate>
-      <guid>https://megacephalo.github.io/posts/project-robot-side-project/sourcing_the_hardware_components/</guid>
+      <guid>http://localhost:1313/posts/project-robot-side-project/sourcing_the_hardware_components/</guid>
       <description>&lt;p&gt;To make my project a reality, I need to design and acquire the hardware to enable running the navigation algorithms and not solely relying on publicly available sensor datasets. Here are my concerns:&lt;/p&gt;&#xA;&lt;h1 id=&#34;functional-and-non-functional-requirements&#34;&gt;Functional and non-functional requirements&lt;/h1&gt;&#xA;&lt;p&gt;Since the project is about developing a robot capable of navigating irregular environments either indoor or outdoor, I would like to build a robust mobile platform that is sturdy enough to traverse through slightly sloped terrain while also having enough capacity to mount two to three sensors. More specifically, my functional requirements are the following:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Line fitting</title>
-      <link>https://megacephalo.github.io/posts/area-linear-algebra/line_fitting/</link>
+      <link>http://localhost:1313/posts/area-linear-algebra/line_fitting/</link>
       <pubDate>Mon, 23 Dec 2024 18:23:08 +0800</pubDate>
-      <guid>https://megacephalo.github.io/posts/area-linear-algebra/line_fitting/</guid>
+      <guid>http://localhost:1313/posts/area-linear-algebra/line_fitting/</guid>
       <description>&lt;h1 id=&#34;what-is-line-fitting&#34;&gt;What is line fitting?&lt;/h1&gt;&#xA;&lt;p&gt;This is actually one derived case of optimization problem; linear optimization to be more precise. As we need to be able to tell or model a tendency out of a bunch of samples that may look irregular at first, we need certain mathematical tools to do so. In all these mathematical tools, we recurr to optimization to help us model a bunch of samples a reasonable model.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Contact Me</title>
-      <link>https://megacephalo.github.io/posts/contact_me/</link>
+      <link>http://localhost:1313/posts/contact_me/</link>
       <pubDate>Mon, 23 Dec 2024 17:58:13 +0800</pubDate>
-      <guid>https://megacephalo.github.io/posts/contact_me/</guid>
+      <guid>http://localhost:1313/posts/contact_me/</guid>
       <description>&lt;p&gt;I am currently based at the Bay Area near San Francisco, CA. If you are around the area, we can grab a coffee and discuss how I can contribute.&lt;/p&gt;&#xA;&lt;p&gt;If you wish to reach out, you can do so by &lt;a href=&#34;amilto:charly.charlongo@gmail.com&#34;&gt;email&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Have a good one and thank you.&lt;/p&gt;</description>
     </item>
     <item>
       <title>About me</title>
-      <link>https://megacephalo.github.io/posts/about_me/</link>
+      <link>http://localhost:1313/posts/about_me/</link>
       <pubDate>Tue, 10 Dec 2024 13:02:16 +0800</pubDate>
-      <guid>https://megacephalo.github.io/posts/about_me/</guid>
+      <guid>http://localhost:1313/posts/about_me/</guid>
       <description>&lt;p&gt;Hi everyone, this is Charly Huang and I am a software engineer interested in autonomous navigation related algorithms and software development. Since little I was fascinated by autonomous robots and this passion has since them motivated me to pursue more advanced degrees and careers in the related fields. As of today, there are still a great number of issues in the autonomous driving realm waiting to be overcome in order to make automated vehicles safe and reliable. To this end,I want to contribute head-on and hands-on to make autonomous driving a true reality in the near future.&lt;/p&gt;</description>
     </item>
     <item>
       <title>My robot side project</title>
-      <link>https://megacephalo.github.io/posts/project-robot-side-project/my_side_project/</link>
+      <link>http://localhost:1313/posts/project-robot-side-project/my_side_project/</link>
       <pubDate>Tue, 10 Dec 2024 13:02:16 +0800</pubDate>
-      <guid>https://megacephalo.github.io/posts/project-robot-side-project/my_side_project/</guid>
+      <guid>http://localhost:1313/posts/project-robot-side-project/my_side_project/</guid>
       <description>&lt;p&gt;About a year and a half into my current profession, I began reflecting on how I could establish myself as a robotics professional—someone capable of understanding, designing, and developing complex projects that integrate autonomous navigation technologies into modern robots. At the same time, we are stepping into an era of rapid and transformative advancements in generative AI, where groundbreaking concepts and tools are being proposed at an unprecedented pace, revolutionizing the way we approach tasks.&lt;/p&gt;</description>
     </item>
   </channel>

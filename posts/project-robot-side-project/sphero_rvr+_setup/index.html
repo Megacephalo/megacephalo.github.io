@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en-us">
   <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-    <title>My robot side project // Megacephalo&#39;s Tech Blog</title>
+    <title>Setting up Sphero RVR&#43; // Megacephalo Tech Blog</title>
     <link rel="shortcut icon" href="/favicon.ico" />
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.140.2">
+    <meta name="generator" content="Hugo 0.140.1">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="Charly Huang" />
     <meta name="description" content="" />
@@ -14,18 +14,20 @@
     
     
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="My robot side project">
-  <meta name="twitter:description" content="About a year and a half into my current profession, I began reflecting on how I could establish myself as a robotics professional—someone capable of understanding, designing, and developing complex projects that integrate autonomous navigation technologies into modern robots. At the same time, we are stepping into an era of rapid and transformative advancements in generative AI, where groundbreaking concepts and tools are being proposed at an unprecedented pace, revolutionizing the way we approach tasks.">
+  <meta name="twitter:title" content="Setting up Sphero RVR&#43;">
+  <meta name="twitter:description" content="Introduction Let’s start with making sure that our rover can work as expected. Assume that you placed your order of a Sphero RVR&#43; and now it is delivered right to your doorstep. You unboxed the rover with all the excitement that has not appeared since you graduated from college. Now what?
+What you will need As you go through the rover’s getting started manual and check the items that come in the package: the programmable robot…OK it is not broken, 1 large battery bar…that goes in the robot you pressumed, 1 plastic key…that’s to lock the battery in place in the slot in the middle of the chasis, 1 USB charging cable…err that plugs directly to the battery and not the rover itself, 1 roll cage and 1 mounting plate…you don’t need it for the rest of the ride, 1 blueprint…this is the plate you think about mounting all the components on, 1 set of color cards…you don’t need these as you won’t be using the color sensor locating down to the ground at the buttom of the chasis.">
 
-    <meta property="og:url" content="http://localhost:1313/posts/project-robot-side-project/my_side_project/">
-  <meta property="og:site_name" content="Megacephalo&#39;s Tech Blog">
-  <meta property="og:title" content="My robot side project">
-  <meta property="og:description" content="About a year and a half into my current profession, I began reflecting on how I could establish myself as a robotics professional—someone capable of understanding, designing, and developing complex projects that integrate autonomous navigation technologies into modern robots. At the same time, we are stepping into an era of rapid and transformative advancements in generative AI, where groundbreaking concepts and tools are being proposed at an unprecedented pace, revolutionizing the way we approach tasks.">
+    <meta property="og:url" content="http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup/">
+  <meta property="og:site_name" content="Megacephalo Tech Blog">
+  <meta property="og:title" content="Setting up Sphero RVR&#43;">
+  <meta property="og:description" content="Introduction Let’s start with making sure that our rover can work as expected. Assume that you placed your order of a Sphero RVR&#43; and now it is delivered right to your doorstep. You unboxed the rover with all the excitement that has not appeared since you graduated from college. Now what?
+What you will need As you go through the rover’s getting started manual and check the items that come in the package: the programmable robot…OK it is not broken, 1 large battery bar…that goes in the robot you pressumed, 1 plastic key…that’s to lock the battery in place in the slot in the middle of the chasis, 1 USB charging cable…err that plugs directly to the battery and not the rover itself, 1 roll cage and 1 mounting plate…you don’t need it for the rest of the ride, 1 blueprint…this is the plate you think about mounting all the components on, 1 set of color cards…you don’t need these as you won’t be using the color sensor locating down to the ground at the buttom of the chasis.">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2024-12-10T13:02:16+08:00">
-    <meta property="article:modified_time" content="2024-12-10T13:02:16+08:00">
+    <meta property="article:published_time" content="2024-12-30T17:06:52+08:00">
+    <meta property="article:modified_time" content="2024-12-30T17:06:52+08:00">
     <meta property="article:tag" content="Robot Side-Project">
 
 
@@ -35,7 +37,7 @@
   <body>
     <header class="app-header">
       <a href="http://localhost:1313/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
-      <span class="app-header-title">Megacephalo&#39;s Tech Blog</span>
+      <span class="app-header-title">Megacephalo Tech Blog</span>
       <nav class="app-header-menu">
           <a class="app-header-menu-item" href="/">Home</a>
              - 
@@ -69,11 +71,11 @@
       
   <article class="post">
     <header class="post-header">
-      <h1 class ="post-title">My robot side project</h1>
+      <h1 class ="post-title">Setting up Sphero RVR&#43;</h1>
       <div class="post-meta">
         <div>
           <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          Dec 10, 2024
+          Dec 30, 2024
         </div>
         <div>
           <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -86,12 +88,23 @@
       </div>
     </header>
     <div class="post-content">
-      <p>About a year and a half into my current profession, I began reflecting on how I could establish myself as a robotics professional—someone capable of understanding, designing, and developing complex projects that integrate autonomous navigation technologies into modern robots. At the same time, we are stepping into an era of rapid and transformative advancements in generative AI, where groundbreaking concepts and tools are being proposed at an unprecedented pace, revolutionizing the way we approach tasks.</p>
-<p>It was during this realization that I decided I could no longer rely solely on the hope of finding a forward-thinking employer willing to entrust me with the opportunity to design and develop cutting-edge autonomous navigation algorithms. Instead, I resolved to prove my worth by taking the initiative to start my own robotics project. My goal? To design and implement the necessary algorithms to breathe life into a robot capable of navigating highly dynamic environments independently. I had achieved similar feats in the past, and this time, I was determined to surpass myself.</p>
-<p>To bring this vision to life, I acquired a robotic rover, a battery, two advanced sensors, the corresponding cable harness, and a development kit to serve as the robot’s eyes and brain. I also unintentionally enlisted the help of a colleague and friend to design a sensor housing that would securely mount the sensors, development kit, and battery onto the rover. This setup allowed me to focus entirely on developing the navigation algorithms and software architecture.</p>
-<p>Thankfully, the hardware aspects of the project are nearly taken care of. The sensor housing might need some redesigning, which I plan to tackle with my friend’s assistance, my own efforts, or by hiring an expert if needed. Once this step is complete, I will have an ideal robotic platform capable of navigating its surroundings with confidence and precision—almost as if it owns the space!</p>
-<p>Wish me luck as I embark on this exciting journey. Cheers!</p>
-<p>If you want to learn about my journey, please refer to the following articles:</p>
+      <h1 id="introduction">Introduction</h1>
+<p>Let&rsquo;s start with making sure that our rover can work as expected. Assume that you placed your order of a Sphero RVR+ and now it is delivered right to your doorstep. You unboxed the rover with all the excitement that has not appeared since you graduated from college. Now what?</p>
+<h1 id="what-you-will-need">What you will need</h1>
+<p>As you go through the rover&rsquo;s getting started manual and check the items that come in the package: the programmable robot&hellip;OK it is not broken, 1 large battery bar&hellip;that goes in the robot you pressumed, 1 plastic key&hellip;that&rsquo;s to lock the battery in place in the slot in the middle of the chasis, 1 USB charging cable&hellip;err that plugs directly to the battery and not the rover itself, 1 roll cage and 1 mounting plate&hellip;you don&rsquo;t need it for the rest of the ride, 1 blueprint&hellip;this is the plate you think about mounting all the components on, 1 set of color cards&hellip;you don&rsquo;t need these as you won&rsquo;t be using the color sensor locating down to the ground at the buttom of the chasis.</p>
+<p>You happily slice in the battery and lock it in place with the little key. Press the power button to turn on the rover and it swiftly answered with blinkinig flash lights. The game is on! You followed the instruction to installed the edu app to your tablet and successfully updated the robot firmware and able to remote control the robot with the tablet. Excellent!</p>
+<p>But this is not all. For the subsequent project you will need:</p>
+<ul>
+<li>A computer running on Linux Ubuntu 22.04 LTS</li>
+<li>RSO 2 Humble</li>
+<li>At least 3 female-female jumper cables to connect between the UART pins of the dev kit and the rover.</li>
+<li>(Optional) A USB-jumper debug cable to facilitate the communication bewteen your laptop and the rover. The UART end has at least 3 UART female connectors</li>
+<li>Python 3.12+</li>
+</ul>
+<h1 id="hardware-setup">Hardware setup</h1>
+<p>You need to understand how to connect the laptop and subsequently the development kit to communicate with the robot. From the</p>
+<h1 id="test-the-sdk">Test the SDK</h1>
+<h1 id="develop-the-sphero-rvr-ros2-package">Develop the Sphero RVR+ ROS2 package</h1>
 
     </div>
     <div class="post-footer">
