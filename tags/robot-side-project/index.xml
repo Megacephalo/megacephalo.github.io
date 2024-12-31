@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Robot Side-Project on Megacephalo&#39;s Tech Blog</title>
-    <link>http://localhost:1313/tags/robot-side-project/</link>
+    <link>https://megacephalo.github.io/tags/robot-side-project/</link>
     <description>Recent content in Robot Side-Project on Megacephalo&#39;s Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 31 Dec 2024 00:06:54 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/robot-side-project/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://megacephalo.github.io/tags/robot-side-project/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Sphero RVR&#43; setup part 2</title>
-      <link>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</link>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</link>
       <pubDate>Tue, 31 Dec 2024 00:06:54 +0800</pubDate>
-      <guid>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</guid>
-      <description>&lt;p&gt;If you have not gone through the previous article &lt;a href=&#34;http://localhost:1313/posts/project-robot-side-project/sphero_rvr+_setup_part_1.md&#34;&gt;Sphero RVR+ setup part 1&lt;/a&gt;, please do so before proceeding with this one. But if you did, then you should have the hardware up and running and you are good to go with the software setup.&lt;/p&gt;&#xA;&lt;p&gt;Assuming you have installed the proper firmware and booted to Ubuntu 22.04 LTS. Congratulations! Now we are good to go to set up the necessary network settings and set up the ROS 2 Humble workspace to eventually create a Sphero RVR+ ROS 2 package driver.&lt;/p&gt;</description>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</guid>
+      <description>&lt;p&gt;If you have not gone through the previous article &lt;a href=&#34;https://megacephalo.github.io/posts/project-robot-side-project/sphero_rvr+_setup_part_1&#34;&gt;Sphero RVR+ setup part 1&lt;/a&gt;, please do so before proceeding with this one. But if you did, then you should have the hardware up and running and you are good to go with the software setup.&lt;/p&gt;&#xA;&lt;p&gt;Assuming you have installed the proper firmware and booted to Ubuntu 22.04 LTS. Congratulations! Now we are good to go to set up the necessary network settings and set up the ROS 2 Humble workspace to eventually create a Sphero RVR+ ROS 2 package driver.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Sphero RVR&#43; setup part 1</title>
-      <link>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_1/</link>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_1/</link>
       <pubDate>Mon, 30 Dec 2024 17:06:52 +0800</pubDate>
-      <guid>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_1/</guid>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_1/</guid>
       <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s start with making sure that our rover can work as expected. Assume that you placed your order of a Sphero RVR+ and now it is delivered right to your doorstep. You unboxed the rover with all the excitement that has not appeared since you graduated from college. Now what?&lt;/p&gt;&#xA;&lt;h1 id=&#34;what-you-will-need&#34;&gt;What you will need&lt;/h1&gt;&#xA;&lt;p&gt;As you go through the rover&amp;rsquo;s getting started manual and check the items that come in the package: the programmable robot&amp;hellip;OK it is not broken, 1 large battery bar&amp;hellip;that goes in the robot you pressumed, 1 plastic key&amp;hellip;that&amp;rsquo;s to lock the battery in place in the slot in the middle of the chasis, 1 USB charging cable&amp;hellip;err that plugs directly to the battery and not the rover itself, 1 roll cage and 1 mounting plate&amp;hellip;you don&amp;rsquo;t need it for the rest of the ride, 1 blueprint&amp;hellip;this is the plate you think about mounting all the components on, 1 set of color cards&amp;hellip;you don&amp;rsquo;t need these as you won&amp;rsquo;t be using the color sensor locating down to the ground at the buttom of the chasis.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Sourcing the hardware components</title>
-      <link>http://localhost:1313/posts/project-robot-side-project/sourcing_the_hardware_components/</link>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/sourcing_the_hardware_components/</link>
       <pubDate>Fri, 27 Dec 2024 16:35:33 +0800</pubDate>
-      <guid>http://localhost:1313/posts/project-robot-side-project/sourcing_the_hardware_components/</guid>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/sourcing_the_hardware_components/</guid>
       <description>&lt;p&gt;To make my project a reality, I need to design and acquire the hardware to enable running the navigation algorithms and not solely relying on publicly available sensor datasets. Here are my concerns:&lt;/p&gt;&#xA;&lt;h1 id=&#34;functional-and-non-functional-requirements&#34;&gt;Functional and non-functional requirements&lt;/h1&gt;&#xA;&lt;p&gt;Since the project is about developing a robot capable of navigating irregular environments either indoor or outdoor, I would like to build a robust mobile platform that is sturdy enough to traverse through slightly sloped terrain while also having enough capacity to mount two to three sensors. More specifically, my functional requirements are the following:&lt;/p&gt;</description>
     </item>
     <item>
       <title>My robot side project</title>
-      <link>http://localhost:1313/posts/project-robot-side-project/my_side_project/</link>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/my_side_project/</link>
       <pubDate>Tue, 10 Dec 2024 13:02:16 +0800</pubDate>
-      <guid>http://localhost:1313/posts/project-robot-side-project/my_side_project/</guid>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/my_side_project/</guid>
       <description>&lt;p&gt;About a year and a half into my current profession, I began reflecting on how I could establish myself as a robotics professional—someone capable of understanding, designing, and developing complex projects that integrate autonomous navigation technologies into modern robots. At the same time, we are stepping into an era of rapid and transformative advancements in generative AI, where groundbreaking concepts and tools are being proposed at an unprecedented pace, revolutionizing the way we approach tasks.&lt;/p&gt;</description>
     </item>
   </channel>
