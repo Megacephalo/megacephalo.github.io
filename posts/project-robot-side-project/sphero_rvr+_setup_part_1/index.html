@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en-us">
   <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-    <title>Sphero RVR&#43; setup part 1 // Megacephalo Tech Blog</title>
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <title>Sphero RVR&#43; setup part 1 // Megacephalo&#39;s Tech Blog</title>
+    <link rel="shortcut icon" href="../../../favicon.ico" />
     <meta charset="utf-8" />
     <meta name="generator" content="Hugo 0.140.2">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="Charly Huang" />
     <meta name="description" content="" />
-    <link rel="stylesheet" href="/css/main.min.5b1fcc8902588589c4767187402a3c29f8b8d7a6fdef6d9f8f77045bb0d14fee.css" />
+    <link rel="stylesheet" href="../../../css/main.min.5b1fcc8902588589c4767187402a3c29f8b8d7a6fdef6d9f8f77045bb0d14fee.css" />
     
 
     
@@ -19,7 +19,7 @@
 What you will need As you go through the rover’s getting started manual and check the items that come in the package: the programmable robot…OK it is not broken, 1 large battery bar…that goes in the robot you pressumed, 1 plastic key…that’s to lock the battery in place in the slot in the middle of the chasis, 1 USB charging cable…err that plugs directly to the battery and not the rover itself, 1 roll cage and 1 mounting plate…you don’t need it for the rest of the ride, 1 blueprint…this is the plate you think about mounting all the components on, 1 set of color cards…you don’t need these as you won’t be using the color sensor locating down to the ground at the buttom of the chasis.">
 
     <meta property="og:url" content="http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_1/">
-  <meta property="og:site_name" content="Megacephalo Tech Blog">
+  <meta property="og:site_name" content="Megacephalo&#39;s Tech Blog">
   <meta property="og:title" content="Sphero RVR&#43; setup part 1">
   <meta property="og:description" content="Introduction Let’s start with making sure that our rover can work as expected. Assume that you placed your order of a Sphero RVR&#43; and now it is delivered right to your doorstep. You unboxed the rover with all the excitement that has not appeared since you graduated from college. Now what?
 What you will need As you go through the rover’s getting started manual and check the items that come in the package: the programmable robot…OK it is not broken, 1 large battery bar…that goes in the robot you pressumed, 1 plastic key…that’s to lock the battery in place in the slot in the middle of the chasis, 1 USB charging cable…err that plugs directly to the battery and not the rover itself, 1 roll cage and 1 mounting plate…you don’t need it for the rest of the ride, 1 blueprint…this is the plate you think about mounting all the components on, 1 set of color cards…you don’t need these as you won’t be using the color sensor locating down to the ground at the buttom of the chasis.">
@@ -36,19 +36,19 @@ What you will need As you go through the rover’s getting started manual and ch
   </head>
   <body>
     <header class="app-header">
-      <a href="http://localhost:1313/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
-      <span class="app-header-title">Megacephalo Tech Blog</span>
+      <a href="http://localhost:1313/"><img class="app-header-avatar" src="../../../images/avatar_headshot.png" alt="Charly Huang" /></a>
+      <span class="app-header-title">Megacephalo&#39;s Tech Blog</span>
       <nav class="app-header-menu">
-          <a class="app-header-menu-item" href="/">Home</a>
+          <a class="app-header-menu-item" href="../../../">Home</a>
              - 
           
-          <a class="app-header-menu-item" href="/posts/">All posts</a>
+          <a class="app-header-menu-item" href="../../../posts/">All posts</a>
              - 
           
-          <a class="app-header-menu-item" href="/posts/about_me">About Me</a>
+          <a class="app-header-menu-item" href="../../../posts/about_me">About Me</a>
              - 
           
-          <a class="app-header-menu-item" href="/posts/contact_me">Contact Me</a>
+          <a class="app-header-menu-item" href="../../../posts/contact_me">Contact Me</a>
       </nav>
       <p>The corner to share my learning on robotics and autonoous navigaation</p>
       <div class="app-header-social">
@@ -106,9 +106,9 @@ What you will need As you go through the rover’s getting started manual and ch
 <p>Since it is trickier to deal with connecting the UART pins between the dev kit and the robot, we will focus on this scenario first.</p>
 <h2 id="connecting-the-jetson-orin-nano-to-sphero-rvr-data-connection">Connecting the Jetson Orin Nano to Sphero RVR+ (Data connection)</h2>
 <p>The Sphero RVR+ provides an UART interface consisting of TX, RX, 5VDC and GND pins. Here is how you connect them:</p>
-<p><img src="/images/project-robot-side-project/sphero_rvr+_setup_part_1/uart_connection.png" alt="UART jumper wire connection diagram"> <br>
+<p><img src="../../../images/project-robot-side-project/sphero_rvr+_setup_part_1/uart_connection.png" alt="UART jumper wire connection diagram"> <br>
 Source: <a href="https://sdk.sphero.com/raspberry-pi-setup/python-sdk-setup">Python SDK Setup (Quick Start)</a></p>
-<p><img src="/images/project-robot-side-project/sphero_rvr+_setup_part_1/OrinPin1.jpg" alt="Jetson Orin Nano pin 1"></p>
+<p><img src="../../../images/project-robot-side-project/sphero_rvr+_setup_part_1/OrinPin1.jpg" alt="Jetson Orin Nano pin 1"></p>
 <p>Note: The UART on the Jetson Orin Nano is typically found on the J41 header. Please refer the pinout diagram at <a href="https://jetsonhacks.com/nvidia-jetson-orin-nano-gpio-header-pinout/">Jetson Orin Nano Expansion Header J12 Pinout</a>. The relevant pins are:</p>
 <ul>
 <li>Pin 8 (TXD)</li>
@@ -191,7 +191,7 @@ Source: <a href="https://sdk.sphero.com/raspberry-pi-setup/python-sdk-setup">Pyt
 </ol>
 <p>If the dev kit is properly powered up and boot into the desktop, you are good to go. We will have another article to discuss how to set up the Jetson Orin Nano with ROS 2 Humble.</p>
 <h1 id="we-are-not-done-yet">We are not done yet&hellip;</h1>
-<p>For the network and software configuration, please refer to the article <a href="/posts/project-robot-side-project/sphero_rvr+_setup_part_2">Sphero RVR+ setup part 2</a>. See you there.</p>
+<p>For the network and software configuration, please refer to the article <a href="../../../posts/project-robot-side-project/sphero_rvr+_setup_part_2">Sphero RVR+ setup part 2</a>. See you there.</p>
 
     </div>
     <div class="post-footer">
