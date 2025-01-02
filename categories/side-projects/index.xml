@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Side-Projects on Megacephalo&#39;s Tech Blog</title>
+    <title>Side-Projects on Megacephalo Tech Blog</title>
     <link>http://localhost:1313/categories/side-projects/</link>
-    <description>Recent content in Side-Projects on Megacephalo&#39;s Tech Blog</description>
+    <description>Recent content in Side-Projects on Megacephalo Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 31 Dec 2024 00:06:54 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 31 Dec 2024 02:20:39 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/side-projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Create Sphero RVR&#43; simulation model</title>
+      <link>http://localhost:1313/posts/project-robot-side-project/create_sphero_rvr_simulation_model/</link>
+      <pubDate>Tue, 31 Dec 2024 02:20:39 +0800</pubDate>
+      <guid>http://localhost:1313/posts/project-robot-side-project/create_sphero_rvr_simulation_model/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;h1 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h1&gt;&#xA;&lt;h1 id=&#34;understanding-the-urdf-basics&#34;&gt;Understanding the URDF basics&lt;/h1&gt;&#xA;&lt;h1 id=&#34;creating-your-first-robot-model&#34;&gt;Creating your first robot model&lt;/h1&gt;&#xA;&lt;h1 id=&#34;building-urdf-with-xacro&#34;&gt;Building URDF with xacro&lt;/h1&gt;&#xA;&lt;h1 id=&#34;visualizing-the-model&#34;&gt;Visualizing the model&lt;/h1&gt;&#xA;&lt;h1 id=&#34;adding-dynamics-to-your-robot&#34;&gt;Adding dynamics to your robot&lt;/h1&gt;&#xA;&lt;h1 id=&#34;defining-a-complete-robot-description-package&#34;&gt;Defining a complete robot description package&lt;/h1&gt;&#xA;&lt;h2 id=&#34;zed2i&#34;&gt;ZED2i&lt;/h2&gt;&#xA;&lt;h2 id=&#34;unitree-lidar-l1&#34;&gt;Unitree LiDAR L1&lt;/h2&gt;&#xA;&lt;h2 id=&#34;sphero-rvr&#34;&gt;Sphero RVR+&lt;/h2&gt;&#xA;&lt;h2 id=&#34;putting-all-together&#34;&gt;Putting all together&lt;/h2&gt;&#xA;&lt;h1 id=&#34;simulating-the-robot&#34;&gt;Simulating the robot&lt;/h1&gt;&#xA;&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;&#xA;&lt;h1 id=&#34;references&#34;&gt;References&lt;/h1&gt;</description>
+    </item>
     <item>
       <title>Sphero RVR&#43; setup part 2</title>
       <link>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</link>
