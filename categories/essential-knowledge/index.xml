@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Essential Knowledge on Megacephalo&#39;s Tech Blog</title>
-    <link>https://megacephalo.github.io/categories/essential-knowledge/</link>
+    <link>http://localhost:1313/categories/essential-knowledge/</link>
     <description>Recent content in Essential Knowledge on Megacephalo&#39;s Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 23 Dec 2024 18:23:08 +0800</lastBuildDate>
-    <atom:link href="https://megacephalo.github.io/categories/essential-knowledge/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/categories/essential-knowledge/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Line fitting</title>
-      <link>https://megacephalo.github.io/posts/area-linear-algebra/line_fitting/</link>
+      <link>http://localhost:1313/posts/area-linear-algebra/line_fitting/</link>
       <pubDate>Mon, 23 Dec 2024 18:23:08 +0800</pubDate>
-      <guid>https://megacephalo.github.io/posts/area-linear-algebra/line_fitting/</guid>
+      <guid>http://localhost:1313/posts/area-linear-algebra/line_fitting/</guid>
       <description>&lt;h1 id=&#34;what-is-line-fitting&#34;&gt;What is line fitting?&lt;/h1&gt;&#xA;&lt;p&gt;This is actually one derived case of optimization problem; linear optimization to be more precise. As we need to be able to tell or model a tendency out of a bunch of samples that may look irregular at first, we need certain mathematical tools to do so. In all these mathematical tools, we recurr to optimization to help us model a bunch of samples a reasonable model.&lt;/p&gt;</description>
     </item>
   </channel>
