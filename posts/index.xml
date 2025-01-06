@@ -13,7 +13,7 @@
       <link>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</link>
       <pubDate>Tue, 31 Dec 2024 00:06:54 +0800</pubDate>
       <guid>http://localhost:1313/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</guid>
-      <description>&lt;p&gt;If you have not gone through the previous article &lt;a href=&#34;../posts/project-robot-side-project/sphero_rvr+_setup_part_1&#34;&gt;Sphero RVR+ setup part 1&lt;/a&gt;, please do so before proceeding with this one. But if you did, then you should have the hardware up and running and you are good to go with the software setup.&lt;/p&gt;&#xA;&lt;p&gt;Assuming you have installed the proper firmware and booted to Ubuntu 22.04 LTS. Congratulations! Now we are good to go to set up the necessary network settings and set up the ROS 2 Humble workspace to eventually create a Sphero RVR+ ROS 2 package driver.&lt;/p&gt;</description>
+      <description>&lt;p&gt;If you have not gone through the previous article &lt;a href=&#34;http://localhost:1313/posts/project-robot-side-project/sphero_rvr+_setup_part_1&#34;&gt;Sphero RVR+ setup part 1&lt;/a&gt;, please do so before proceeding with this one. But if you did, then you should have the hardware up and running and you are good to go with the software setup.&lt;/p&gt;&#xA;&lt;p&gt;Assuming you have installed the proper firmware and booted to Ubuntu 22.04 LTS. Congratulations! Now we are good to go to set up the necessary network settings and set up the ROS 2 Humble workspace to eventually create a Sphero RVR+ ROS 2 package driver.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Sphero RVR&#43; setup part 1</title>
