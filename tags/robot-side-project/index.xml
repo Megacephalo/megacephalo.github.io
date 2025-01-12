@@ -6,8 +6,43 @@
     <description>Recent content in Robot Side-Project on Megacephalo&#39;s Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 31 Dec 2024 00:06:54 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 10 Jan 2025 11:33:52 +0800</lastBuildDate>
     <atom:link href="https://megacephalo.github.io/tags/robot-side-project/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Let&#39;s put everything together</title>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/lets_put_everything_together/</link>
+      <pubDate>Fri, 10 Jan 2025 11:33:52 +0800</pubDate>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/lets_put_everything_together/</guid>
+      <description>&lt;p&gt;This article belongs to the series &amp;ldquo;&lt;a href=&#34;https://megacephalo.github.io/posts/project-robot-side-project/create_sphero_rvr_simulation_model&#34;&gt;Create Sphero RVR+ simulation model&lt;/a&gt;&amp;rdquo; and will walk you through the essential steps to create the rover&amp;rsquo;s model.&lt;/p&gt;&#xA;&lt;h1 id=&#34;i-assume-you-have-already-gone-through-the-previous-posts&#34;&gt;I assume you have already gone through the previous posts&lt;/h1&gt;&#xA;&lt;p&gt;If you are reading this post, I assume you already have gone through the previoous posts in the series to set up the simulation models for the rover, ZED 2i, and the Unitree LiDAR. If you haven&amp;rsquo;t, please review those articles before proceeding here. Much appreciated.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Create the rover&#39;s model</title>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/create_the_rover_model/</link>
+      <pubDate>Wed, 08 Jan 2025 17:43:22 +0800</pubDate>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/create_the_rover_model/</guid>
+      <description>&lt;p&gt;This article belongs to the series &amp;ldquo;&lt;a href=&#34;https://megacephalo.github.io/posts/project-robot-side-project/create_sphero_rvr_simulation_model&#34;&gt;Create Sphero RVR+ simulation model&lt;/a&gt;&amp;rdquo; and will walk you through the essential steps to create the rover&amp;rsquo;s model.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://megacephalo.github.io/images/project-robot-side-project/create_the_rover_model/sphero_rvr_product_pic.png&#34; alt=&#34;Sphero RVR+ product image&#34;&gt; &lt;br&gt;&#xA;Source: &lt;a href=&#34;https://sphero.com/blogs/press-releases/sphero-announces-rvr-plus&#34;&gt;https://sphero.com/blogs/press-releases/sphero-announces-rvr-plus&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;To avoid confusion, I will refer the Sphero RVR+ robot as smply the &amp;ldquo;rover&amp;rdquo; for the remainder of this article.&lt;/p&gt;&#xA;&lt;h1 id=&#34;lets-combine-the-different-parts-of-the-rover-into-a-single-model&#34;&gt;Let&amp;rsquo;s combine the different parts of the rover into a single model&lt;/h1&gt;&#xA;&lt;p&gt;First of all, big shout out to the Information institutte of &lt;a href=&#34;https://www.uibk.ac.at/informatik/&#34;&gt;Department of Computer Science&lt;/a&gt; of &lt;a href=&#34;https://www.uibk.ac.at/en/&#34;&gt;University of Innsbruck | Universität Innsbruck&lt;/a&gt; for providing their implementation of modeling and, most importantly, the meshes of the rover, as its CAD should not be publicly released by its manufacturer due to the fafct that the rover is a final product and not just any upper-stream component such as sensors and motors. In the same vein, I also claim my disclaimer here that the usage of the rover&amp;rsquo;s simulation model hereby is for hobby only and therefore is not involved anyhow in any commercial or lucrative purpose nor incentive. You can find their implementation here: &lt;a href=&#34;https://git.uibk.ac.at/informatik/stair/ros-sphero-rvr/-/tree/main/sphero_rvr_description?ref_type=heads&#34;&gt;ros-sphero-rvr/sphero_rvr_description&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Create the StereoLabs ZED 2i Simulation Model</title>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/create_zed_2i_simulation_model/</link>
+      <pubDate>Mon, 06 Jan 2025 20:31:00 +0800</pubDate>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/create_zed_2i_simulation_model/</guid>
+      <description>&lt;p&gt;This article belongs to the series &amp;ldquo;&lt;a href=&#34;https://megacephalo.github.io/posts/project-robot-side-project/create_sphero_rvr_simulation_model&#34;&gt;Create Sphero RVR+ simulation model&lt;/a&gt;&amp;rdquo; and will walk you through the steps to set up a StereoLabs ZED 2i camera simulation model.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://megacephalo.github.io/images/project-robot-side-project/create_zed_2i_simulation_model/Zed2ifacedawn_cropped.png&#34; alt=&#34;ZED 2i facedown&#34;&gt; &lt;br&gt;&#xA;Source: &lt;a href=&#34;https://www.stereolabs.com/en-tw/store/products/zed-2i&#34;&gt;ZED 2i Stereo Camera | StereoLabs Store | StereoLabs&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;the-short-route&#34;&gt;The short route&lt;/h1&gt;&#xA;&lt;p&gt;StereoLabs, the manufacturer of ZED 2i along with other series of the stereo-camera products, has already released the official ROS 2 description packages ready for visualization, which is another bonus point why I chose their product.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Build the Unitree LiDAR L1 Simulation Model from scratch</title>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/unitree_lidar_l1_simulation_model/</link>
+      <pubDate>Mon, 06 Jan 2025 20:19:44 +0800</pubDate>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/unitree_lidar_l1_simulation_model/</guid>
+      <description>&lt;p&gt;This article belongs to the series &amp;ldquo;&lt;a href=&#34;https://megacephalo.github.io/posts/project-robot-side-project/create_sphero_rvr_simulation_model&#34;&gt;Create Sphero RVR+ simulation model&lt;/a&gt;&amp;rdquo; and will walk you through creating your own Unitree L1 LiDAR.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://megacephalo.github.io/images/project-robot-side-project/unitree_lidar_l1_simulation_model/unitree_l1_lidar_item_photo_1080x.png&#34; alt=&#34;Unitree L1 LiDAR product photo&#34;&gt; &lt;br&gt;&#xA;Source: &lt;a href=&#34;https://shop.unitree.com/products/unitree-4d-lidar-l1&#34;&gt;Unitree 4D LiDAR L1 - Unitree Robotics&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;create-the-simulation-model-for-unitree-l1-lidar&#34;&gt;Create the simulation model for Unitree L1 LiDAR&lt;/h1&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s create a ROS 2 description for the LiDAR. I recommend creating a C++ package:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd &amp;lt;path/to/your&amp;gt;/ros2_ws/src&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ros2 pkg create --build-type ament_cmake unitree_lidar_description&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Remember to replace to your actual workspace path.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Create Sphero RVR&#43; simulation model</title>
+      <link>https://megacephalo.github.io/posts/project-robot-side-project/create_sphero_rvr_simulation_model/</link>
+      <pubDate>Tue, 31 Dec 2024 02:20:39 +0800</pubDate>
+      <guid>https://megacephalo.github.io/posts/project-robot-side-project/create_sphero_rvr_simulation_model/</guid>
+      <description>&lt;h1 id=&#34;where-are-we-why-and-how-to-simulate-our-robot-from-scratch&#34;&gt;Where are we? Why and how to simulate our robot from scratch?&lt;/h1&gt;&#xA;&lt;p&gt;Now as you have purchased the sensors, the development kit, the battery, and, most importantly, your robot rover / mobile platform, what should you do to &amp;ldquo;port&amp;rdquo; it into the virtual world to either visualize the robot model or do some serious simulation with it? After all you cannot develop the algorithms on top of something that is barely depicted in the virtual world.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Sphero RVR&#43; setup part 2</title>
       <link>https://megacephalo.github.io/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</link>

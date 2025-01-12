@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Let&#39;s put everything together // Megacephalo&#39;s Tech Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.140.2">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Charly Huang" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.5b1fcc8902588589c4767187402a3c29f8b8d7a6fdef6d9f8f77045bb0d14fee.css" />
+    
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Let&#39;s put everything together">
+  <meta name="twitter:description" content="This article belongs to the series “Create Sphero RVR&#43; simulation model” and will walk you through the essential steps to create the rover’s model.
+I assume you have already gone through the previous posts If you are reading this post, I assume you already have gone through the previoous posts in the series to set up the simulation models for the rover, ZED 2i, and the Unitree LiDAR. If you haven’t, please review those articles before proceeding here. Much appreciated.">
+
+    <meta property="og:url" content="https://megacephalo.github.io/posts/project-robot-side-project/lets_put_everything_together/">
+  <meta property="og:site_name" content="Megacephalo&#39;s Tech Blog">
+  <meta property="og:title" content="Let&#39;s put everything together">
+  <meta property="og:description" content="This article belongs to the series “Create Sphero RVR&#43; simulation model” and will walk you through the essential steps to create the rover’s model.
+I assume you have already gone through the previous posts If you are reading this post, I assume you already have gone through the previoous posts in the series to set up the simulation models for the rover, ZED 2i, and the Unitree LiDAR. If you haven’t, please review those articles before proceeding here. Much appreciated.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-01-10T11:33:52+08:00">
+    <meta property="article:modified_time" content="2025-01-10T11:33:52+08:00">
+    <meta property="article:tag" content="Robot Side-Project">
+
+
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KR2N7R73Y8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KR2N7R73Y8');
+    </script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://megacephalo.github.io/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
+      <span class="app-header-title">Megacephalo&#39;s Tech Blog</span>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">All posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/about_me">About Me</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/contact_me">Contact Me</a>
+      </nav>
+      <p>The corner to share my learning on robotics and autonoous navigaation</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/Megacephalo" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentColor"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+        
+          <a href="https://www.linkedin.com/in/charlyhuang/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentColor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        
+          <a href="https://www.youtube.com/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-youtube" viewBox="0 0 24 24" fill="currentColor"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Let&#39;s put everything together</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Jan 10, 2025
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          4 min read
+        </div>
+        <div>
+          <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <a class="tag" href="https://megacephalo.github.io/tags/robot-side-project/">Robot Side-Project</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>This article belongs to the series &ldquo;<a href="/posts/project-robot-side-project/create_sphero_rvr_simulation_model">Create Sphero RVR+ simulation model</a>&rdquo; and will walk you through the essential steps to create the rover&rsquo;s model.</p>
+<h1 id="i-assume-you-have-already-gone-through-the-previous-posts">I assume you have already gone through the previous posts</h1>
+<p>If you are reading this post, I assume you already have gone through the previoous posts in the series to set up the simulation models for the rover, ZED 2i, and the Unitree LiDAR. If you haven&rsquo;t, please review those articles before proceeding here. Much appreciated.</p>
+<h1 id="what-you-will-need">What you will need</h1>
+<p>Now let&rsquo;s make a checlist of what you already have up to this stage:</p>
+<ul>
+<li>ROS 2 package <code>unitree_lidar_description</code></li>
+<li>ROS 2 package <code>zed2i_ros2_description</code></li>
+<li>ROS 2 package <code>sphero_rvr_description</code></li>
+</ul>
+<p>And now, the next step is up to you. I opt to work with the same <code>sphero_rvr_description</code> package but you can also go with creating a new ROS 2 package to load in everything from there.</p>
+<h1 id="the-main-steps-we-will-take">The main steps we will take</h1>
+<p>Since we already have the URDF files of the corresponding parts, we simply have to include the files and then call the components and link them by <code>&lt;joint&gt;</code> elements. That is,</p>
+<ol>
+<li>Include the related URDF files from the different packages</li>
+<li>Use the <code>&lt;joint&gt;</code> elements to link these links together in a coherent TF tree</li>
+</ol>
+<h1 id="i-know-but-how">I know, but how?</h1>
+<p>In your description package, under the <code>model/</code> directory, add a new URDF script <code>whole_model.urdf.xacro</code>. In this file, paste the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Rover_with_sensor&#34;</span> <span style="color:#a6e22e">xmlns:xacro=</span><span style="color:#e6db74">&#34;http://ros.org/wiki/xacro&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- include Unitree L1 LiDAR model --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find unitree_lidar_description)/model/unilidar_l1.urdf.xacro&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- include StereoLabs ZED 2i model --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find zed2i_ros2_description)/model/zed2i_urdf.xacro&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- include Sphero RVR+ model --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find sphero_rvr_description)/model/sphero_rvr.urdf.xacro&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;robotname&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;Sphero_RVR+&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Unitree L1 LiDAR parameters --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;l1_origin_x&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;l1_origin_y&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;l1_origin_z&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.2&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- ZED 2i parameters --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;camera_name&#34;</span>   <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;zed2i&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;joint_x&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.1&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;joint_y&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;joint_z&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.15&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- base_link -&gt; LIDAR --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unilidar_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span> <span style="color:#a6e22e">dont_collapse=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;$(arg l1_origin_x) $(arg l1_origin_y) $(arg l1_origin_z)&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;unilidar_lidar&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- base_link -&gt; ZED 2i --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;zed_2i_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span> <span style="color:#a6e22e">dont_collapse=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;$(arg joint_x) $(arg joint_y) $(arg joint_z)&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_link&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><p>The content should be self-explanatory. First we load in the corresponding URDF files of the components, and then simply define the joints to associae them one from another. Or should we say, associate the sensors in relationship to the rover&rsquo;s chasis.</p>
+<h2 id="now-dont-forget-the-launch-file">Now don&rsquo;t forget the launch file</h2>
+<p>The launch file is still the same, except that this time we are going to load <code>whole_model.urdf.xacro</code>. You can either use the already existing launch file and simply change the loaded in URDF file path, or you can start fresh with the launch file <code>whole_robot.launch.py</code> and paste the following content in it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pathlib <span style="color:#f92672">import</span> Path
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch <span style="color:#f92672">import</span> LaunchDescription
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch.substitutions <span style="color:#f92672">import</span> Command
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch_ros.actions <span style="color:#f92672">import</span> Node
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch_ros.substitutions <span style="color:#f92672">import</span> FindPackageShare
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_launch_description</span>():
+</span></span><span style="display:flex;"><span>    pkg_path <span style="color:#f92672">=</span> FindPackageShare(<span style="color:#e6db74">&#39;sphero_rvr_description&#39;</span>)<span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#39;sphero_rvr_description&#39;</span>)
+</span></span><span style="display:flex;"><span>    urdf_dir: Path <span style="color:#f92672">=</span> Path(pkg_path) <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;model&#39;</span>
+</span></span><span style="display:flex;"><span>    xacro_file_path <span style="color:#f92672">=</span> str( urdf_dir <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;whole_model.urdf.xacro&#39;</span> )
+</span></span><span style="display:flex;"><span>    rviz_config_path <span style="color:#f92672">=</span> str( Path(pkg_path) <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;launch&#39;</span> <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;single_robot_test_view.rviz&#39;</span> )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> Path(xacro_file_path)<span style="color:#f92672">.</span>exists(), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;URDF file not found at </span><span style="color:#e6db74">{</span>xacro_file_path<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> Path(xacro_file_path)<span style="color:#f92672">.</span>is_file(), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;URDF file </span><span style="color:#e6db74">{</span>xacro_file_path<span style="color:#e6db74">}</span><span style="color:#e6db74"> is NOT a file&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> LaunchDescription([
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Robot State Publisher Node</span>
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            output<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;screen&#39;</span>,
+</span></span><span style="display:flex;"><span>            parameters<span style="color:#f92672">=</span>[{<span style="color:#e6db74">&#39;robot_description&#39;</span>: Command([<span style="color:#e6db74">&#39;xacro &#39;</span>, xacro_file_path])}],
+</span></span><span style="display:flex;"><span>            arguments<span style="color:#f92672">=</span>[xacro_file_path]
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            output<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;screen&#39;</span>,
+</span></span><span style="display:flex;"><span>            arguments<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;-d&#39;</span>, rviz_config_path]
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    ])
+</span></span></code></pre></div><p>Note, here since we want to successfully load in all the variables and parameters across various ROS 2 pakcages, we are going to build them altogether:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>colcon build
+</span></span></code></pre></div><p>and run:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ros2 launch sphero_rvr_description whole_robot.launch.py
+</span></span></code></pre></div><p>As already mentioned, I am using the same package <code>sphero_rvr_description</code> to define the whole robot model, but you may have the URDF files elsewhere. It&rsquo;s all up to you.</p>
+<p>Once you run the launch file, you may see the model of the whole robot body appear on Rviz 2. Congratulations, you made it! Now you can start fine-tunning the parameters to suit your need.</p>
+<p><img src="/images/project-robot-side-project/lets_put_everything_together/rviz_sim_model_rover_lidar_zed2i.png" alt="Rviz2 simulation model of the rover, ZED 2i, and Li LIDAR"></p>
+<h1 id="conclusion">Conclusion</h1>
+<p>The series &ldquo;<a href="/posts/project-robot-side-project/create_sphero_rvr_simulation_model">Create Sphero RVR+ simulation model</a>&rdquo; ends with this article. In this post, we go through the last step to call all components models together with one last URDF file and run it. Congratulations! You now learned all the essentials actions to assemble a robot however you please. Stick around as I will roll out more posts of the side project as I go along.</p>
+
+    </div>
+    <div class="post-footer">
+      
+
+      <script src="https://utteranc.es/client.js"
+        repo="megacephalo/megacephalo.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

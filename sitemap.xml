@@ -3,24 +3,39 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://megacephalo.github.io/</loc>
-    <lastmod>2024-12-31T02:20:39+08:00</lastmod>
-  </url><url>
-    <loc>https://megacephalo.github.io/posts/</loc>
-    <lastmod>2024-12-31T02:20:39+08:00</lastmod>
+    <lastmod>2025-01-10T11:33:52+08:00</lastmod>
   </url><url>
     <loc>https://megacephalo.github.io/categories/</loc>
-    <lastmod>2024-12-31T00:06:54+08:00</lastmod>
+    <lastmod>2025-01-10T11:33:52+08:00</lastmod>
+  </url><url>
+    <loc>https://megacephalo.github.io/posts/project-robot-side-project/lets_put_everything_together/</loc>
+    <lastmod>2025-01-10T11:33:52+08:00</lastmod>
+  </url><url>
+    <loc>https://megacephalo.github.io/posts/</loc>
+    <lastmod>2025-01-10T11:33:52+08:00</lastmod>
   </url><url>
     <loc>https://megacephalo.github.io/tags/robot-side-project/</loc>
-    <lastmod>2024-12-31T00:06:54+08:00</lastmod>
+    <lastmod>2025-01-10T11:33:52+08:00</lastmod>
   </url><url>
     <loc>https://megacephalo.github.io/categories/side-projects/</loc>
-    <lastmod>2024-12-31T00:06:54+08:00</lastmod>
-  </url><url>
-    <loc>https://megacephalo.github.io/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</loc>
-    <lastmod>2024-12-31T00:06:54+08:00</lastmod>
+    <lastmod>2025-01-10T11:33:52+08:00</lastmod>
   </url><url>
     <loc>https://megacephalo.github.io/tags/</loc>
+    <lastmod>2025-01-10T11:33:52+08:00</lastmod>
+  </url><url>
+    <loc>https://megacephalo.github.io/posts/project-robot-side-project/create_the_rover_model/</loc>
+    <lastmod>2025-01-08T17:43:22+08:00</lastmod>
+  </url><url>
+    <loc>https://megacephalo.github.io/posts/project-robot-side-project/create_zed_2i_simulation_model/</loc>
+    <lastmod>2025-01-06T20:31:00+08:00</lastmod>
+  </url><url>
+    <loc>https://megacephalo.github.io/posts/project-robot-side-project/unitree_lidar_l1_simulation_model/</loc>
+    <lastmod>2025-01-06T20:19:44+08:00</lastmod>
+  </url><url>
+    <loc>https://megacephalo.github.io/posts/project-robot-side-project/create_sphero_rvr_simulation_model/</loc>
+    <lastmod>2024-12-31T02:20:39+08:00</lastmod>
+  </url><url>
+    <loc>https://megacephalo.github.io/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_2/</loc>
     <lastmod>2024-12-31T00:06:54+08:00</lastmod>
   </url><url>
     <loc>https://megacephalo.github.io/posts/project-robot-side-project/sphero_rvr&#43;_setup_part_1/</loc>

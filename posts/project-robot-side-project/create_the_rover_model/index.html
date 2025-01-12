@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Create the rover&#39;s model // Megacephalo&#39;s Tech Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.140.2">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Charly Huang" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.5b1fcc8902588589c4767187402a3c29f8b8d7a6fdef6d9f8f77045bb0d14fee.css" />
+    
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Create the rover&#39;s model">
+  <meta name="twitter:description" content="This article belongs to the series “Create Sphero RVR&#43; simulation model” and will walk you through the essential steps to create the rover’s model.
+Source: https://sphero.com/blogs/press-releases/sphero-announces-rvr-plus
+To avoid confusion, I will refer the Sphero RVR&#43; robot as smply the “rover” for the remainder of this article.
+Let’s combine the different parts of the rover into a single model First of all, big shout out to the Information institutte of Department of Computer Science of University of Innsbruck | Universität Innsbruck for providing their implementation of modeling and, most importantly, the meshes of the rover, as its CAD should not be publicly released by its manufacturer due to the fafct that the rover is a final product and not just any upper-stream component such as sensors and motors. In the same vein, I also claim my disclaimer here that the usage of the rover’s simulation model hereby is for hobby only and therefore is not involved anyhow in any commercial or lucrative purpose nor incentive. You can find their implementation here: ros-sphero-rvr/sphero_rvr_description.">
+
+    <meta property="og:url" content="https://megacephalo.github.io/posts/project-robot-side-project/create_the_rover_model/">
+  <meta property="og:site_name" content="Megacephalo&#39;s Tech Blog">
+  <meta property="og:title" content="Create the rover&#39;s model">
+  <meta property="og:description" content="This article belongs to the series “Create Sphero RVR&#43; simulation model” and will walk you through the essential steps to create the rover’s model.
+Source: https://sphero.com/blogs/press-releases/sphero-announces-rvr-plus
+To avoid confusion, I will refer the Sphero RVR&#43; robot as smply the “rover” for the remainder of this article.
+Let’s combine the different parts of the rover into a single model First of all, big shout out to the Information institutte of Department of Computer Science of University of Innsbruck | Universität Innsbruck for providing their implementation of modeling and, most importantly, the meshes of the rover, as its CAD should not be publicly released by its manufacturer due to the fafct that the rover is a final product and not just any upper-stream component such as sensors and motors. In the same vein, I also claim my disclaimer here that the usage of the rover’s simulation model hereby is for hobby only and therefore is not involved anyhow in any commercial or lucrative purpose nor incentive. You can find their implementation here: ros-sphero-rvr/sphero_rvr_description.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-01-08T17:43:22+08:00">
+    <meta property="article:modified_time" content="2025-01-08T17:43:22+08:00">
+    <meta property="article:tag" content="Robot Side-Project">
+
+
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KR2N7R73Y8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KR2N7R73Y8');
+    </script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://megacephalo.github.io/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
+      <span class="app-header-title">Megacephalo&#39;s Tech Blog</span>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">All posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/about_me">About Me</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/contact_me">Contact Me</a>
+      </nav>
+      <p>The corner to share my learning on robotics and autonoous navigaation</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/Megacephalo" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentColor"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+        
+          <a href="https://www.linkedin.com/in/charlyhuang/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentColor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        
+          <a href="https://www.youtube.com/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-youtube" viewBox="0 0 24 24" fill="currentColor"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Create the rover&#39;s model</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Jan 8, 2025
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          9 min read
+        </div>
+        <div>
+          <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <a class="tag" href="https://megacephalo.github.io/tags/robot-side-project/">Robot Side-Project</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>This article belongs to the series &ldquo;<a href="/posts/project-robot-side-project/create_sphero_rvr_simulation_model">Create Sphero RVR+ simulation model</a>&rdquo; and will walk you through the essential steps to create the rover&rsquo;s model.</p>
+<p><img src="/images/project-robot-side-project/create_the_rover_model/sphero_rvr_product_pic.png" alt="Sphero RVR+ product image"> <br>
+Source: <a href="https://sphero.com/blogs/press-releases/sphero-announces-rvr-plus">https://sphero.com/blogs/press-releases/sphero-announces-rvr-plus</a></p>
+<p>To avoid confusion, I will refer the Sphero RVR+ robot as smply the &ldquo;rover&rdquo; for the remainder of this article.</p>
+<h1 id="lets-combine-the-different-parts-of-the-rover-into-a-single-model">Let&rsquo;s combine the different parts of the rover into a single model</h1>
+<p>First of all, big shout out to the Information institutte of <a href="https://www.uibk.ac.at/informatik/">Department of Computer Science</a> of <a href="https://www.uibk.ac.at/en/">University of Innsbruck | Universität Innsbruck</a> for providing their implementation of modeling and, most importantly, the meshes of the rover, as its CAD should not be publicly released by its manufacturer due to the fafct that the rover is a final product and not just any upper-stream component such as sensors and motors. In the same vein, I also claim my disclaimer here that the usage of the rover&rsquo;s simulation model hereby is for hobby only and therefore is not involved anyhow in any commercial or lucrative purpose nor incentive. You can find their implementation here: <a href="https://git.uibk.ac.at/informatik/stair/ros-sphero-rvr/-/tree/main/sphero_rvr_description?ref_type=heads">ros-sphero-rvr/sphero_rvr_description</a>.</p>
+<p>Despite the fact that the final model from the mentioned repository may appear to be a rough CAD sketch of the actual rover, it is good enoguh for any posterior evaluations.</p>
+<h2 id="create-a-new-ros-2-description-package">Create a new ROS 2 description package</h2>
+<p>As usual, if you have not created any ROS 2 package to hold the details of the model, let&rsquo;s do it now:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd &lt;path/to/your&gt;/ros2_ws/src
+</span></span><span style="display:flex;"><span>ros2 pkg create --build-type ament_cmake sphero_rvr_description
+</span></span><span style="display:flex;"><span>cd ..
+</span></span><span style="display:flex;"><span>colcon build --packages-select sphero_rvr_description
+</span></span><span style="display:flex;"><span>source ~/.bashrc <span style="color:#75715e"># or</span>
+</span></span><span style="display:flex;"><span>source $HOME/ros2_ws/install/setup.bash <span style="color:#75715e"># to make sure that ROS 2 sources to your current workspace</span>
+</span></span></code></pre></div><p>You created a new package <code>sphero_rvr_description</code> and build it and making sure that the ROS file system can determine where the package is.</p>
+<p>Now head back to the new package, let&rsquo;s create three directories and have CMake to install them when building the package:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Assume you are under the root directory of the ROS 2 workspace</span>
+</span></span><span style="display:flex;"><span>cd src/sphero_rvr_description
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mkdir model
+</span></span><span style="display:flex;"><span>mkdir meshes
+</span></span><span style="display:flex;"><span>mkdir launch
+</span></span></code></pre></div><p>Open the <em>CMakeLists.txt</em> and add the following line in it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span>install(
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">DIRECTORY</span> <span style="color:#e6db74">launch</span> <span style="color:#e6db74">meshes</span> <span style="color:#e6db74">model</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">DESTINATION</span> <span style="color:#e6db74">share/</span><span style="color:#f92672">${</span>PROJECT_NAME<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>Now head to the root directory of the workspace and build the package again. Once this is done, let&rsquo;s add the corresponding URDF under <code>model/</code> directory and the corresponding STL files. Yes, we will have STL file for the wheels and body of the robot.</p>
+<h2 id="the-texture-color-definitions">The texture color definitions</h2>
+<p>Before moving on to creating the URDF file for the main body, let&rsquo;s add a <code>materials.urdf</code> to define the color of the different meshes. Create the file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>touch materials.urdf
+</span></span></code></pre></div><p>Open the file with your favorite IDE or text editor and paste the following content:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/White&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;1 1 1 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/DarkGrey&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.3 0.3 0.3 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/LightGrey&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.8 0.8 0.8 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/Black&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0 0 0 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/Grey&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.7 0.7 0.7 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/Blue&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.0 0.0 0.8 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><p>These material elements define the different colors in their corresponding RGB codes.</p>
+<!-- raw HTML omitted -->
+<h2 id="curate-the-meshes">Curate the meshes</h2>
+<p>Now under the <code>meshes/</code> directory, place all the necessary STL files. You can download these files under <a href="https://git.uibk.ac.at/informatik/stair/ros-sphero-rvr/-/tree/main/sphero_rvr_description?ref_type=heads">ros-sphero-rvr/sphero_rvr_description</a> under the <code>meshes/</code> directory. These STL files are:</p>
+<ul>
+<li>Sphero_Base.stl</li>
+<li>Sphero_Wheel.stl</li>
+<li>Sphero_Wheel_L.stl</li>
+<li>Sphero_Wheel_R.stl</li>
+<li>unilidar_l1_mesh.stl</li>
+</ul>
+<p>Make sure you place all these files under your own <code>meshes/</code> directory. Perfect! Now we are ready to move on to the main URDF file.</p>
+<h2 id="the-main-body-or-the-chasis-of-the-rover">THe main body or the chasis of the rover</h2>
+<p>The first stop is to define the robot&rsquo;s body or its chasis. First, creat the URDF file under the <code>model/</code> directory, where you already created the <code>materials.urdf</code> file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd model/
+</span></span><span style="display:flex;"><span>touch sphero_rvr.urdf.xacro
+</span></span></code></pre></div><p>Open this URDF file with your favorite editor, paste the following content in it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Sphero_RVR+&#34;</span> <span style="color:#a6e22e">xmlns:xacro=</span><span style="color:#e6db74">&#34;http://ros.org/wiki/xacro&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find sphero_rvr_description)/model/materials.urdf&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;robotname&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;Sphero_RVR+&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;mesh_dir&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;meshes&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;M_PI&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;3.1415926535897931&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;velocity_scale_factor&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;mm_to_m&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;mm2_to_m2&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;gr_to_Kg&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;negligible_mass&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;${200*gr_to_Kg}&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;-0.017 -0.101 0.017&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://sphero_rvr_description/meshes/Sphero_Base.stl&#34;</span> <span style="color:#a6e22e">scale=</span><span style="color:#e6db74">&#34;0.001 0.001 0.001&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/White&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/visual&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.0 0.0 0.04&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;box</span> <span style="color:#a6e22e">size=</span><span style="color:#e6db74">&#34;0.2 0.13 0.06&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><p>As you can see, the color file <code>materials.urdf</code> is already included and we can directly access the various colors defined in that file. The <code>robotname</code> as a property is already set to be <code>Sphero_RVR+</code> but you can name it whatever you please.</p>
+<p>The chasis is treated as a link, which is a node of reference frame in the whole TF tree, and it will be later associated to the global frame in the form of <code>map --&gt; odom --&gt; ${robotname}_base_link</code>. From here on for expression simplicity and consistency, instead of calling it as <code>${robotname}_base_link</code> I will simply put it as <code>base_link</code>.</p>
+<!-- raw HTML omitted -->
+<p>In the <a href="">Turtlebot</a> literature, you will also often encounter that in between the <code>odom</code> and <code>base_link</code> there is an extra TF frame called <code>base_footprint</code> and is assigned to be on the ground directly underneath the robot&rsquo;s chasis. This is just an optional convention and would not affect the analysis of spatial transformation down the road.</p>
+<h2 id="the-wheels-of-the-rover">The wheels of the rover</h2>
+<p>Now I&rsquo;ll exemplify how to add a single wheel to show the syntax mechanism of relating from one link to another. This grants you the advantage to assemble a robot from different URDF files of the components. We will also adopt this approach in later article to put our robot and sensors together as a whole.</p>
+<p>So, let&rsquo;s start with the front-left wheel:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">&lt;!-- Left Front Wheel --&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fl_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.059 0.09 0.03&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 90 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;axis</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 1 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;limit</span> <span style="color:#a6e22e">effort=</span><span style="color:#e6db74">&#34;30&#34;</span> <span style="color:#a6e22e">velocity=</span><span style="color:#e6db74">&#34;1.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;safety_controller</span> <span style="color:#a6e22e">k_velocity=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">k_position=</span><span style="color:#e6db74">&#34;15&#34;</span>  <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;dynamics</span> <span style="color:#a6e22e">friction=</span><span style="color:#e6db74">&#34;1.0&#34;</span> <span style="color:#a6e22e">damping=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fl_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fl_link&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;-0.042 0 -0.033&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://sphero_rvr_description/meshes/Sphero_Wheel_L.stl&#34;</span> <span style="color:#a6e22e">scale=</span><span style="color:#e6db74">&#34;0.001 0.001 0.001&#34;</span> <span style="color:#f92672">/&gt;</span> 
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/White&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/visual&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.0 0 0.0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;${M_PI/2} 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;cylinder</span> <span style="color:#a6e22e">radius=</span><span style="color:#e6db74">&#34;0.033&#34;</span> <span style="color:#a6e22e">length=</span><span style="color:#e6db74">&#34;0.03&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span></code></pre></div><p>As we can see here, the order in which the <code>join</code> and <code>link</code> are defined does not matter. The joint element defines the spatial relationship from one parent link or frame to the child. The link, on the other hand, defines the TF frame&rsquo;s physical and visual properties.</p>
+<p>The definition for the rest of the wheels follows the same pattern. The whole URDF script should become as following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Sphero_RVR+&#34;</span> <span style="color:#a6e22e">xmlns:xacro=</span><span style="color:#e6db74">&#34;http://ros.org/wiki/xacro&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find sphero_rvr_description)/model/materials.urdf&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;robotname&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;Sphero_RVR+&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;mesh_dir&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;meshes&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;M_PI&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;3.1415926535897931&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;velocity_scale_factor&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;mm_to_m&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;mm2_to_m2&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;gr_to_Kg&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;negligible_mass&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;${200*gr_to_Kg}&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;-0.017 -0.101 0.017&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://sphero_rvr_description/meshes/Sphero_Base.stl&#34;</span> <span style="color:#a6e22e">scale=</span><span style="color:#e6db74">&#34;0.001 0.001 0.001&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/White&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/visual&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.0 0.0 0.04&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;box</span> <span style="color:#a6e22e">size=</span><span style="color:#e6db74">&#34;0.2 0.13 0.06&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!-- Left Front/Rear Wheel --&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fl_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.059 0.09 0.03&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 90 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;axis</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 1 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;limit</span> <span style="color:#a6e22e">effort=</span><span style="color:#e6db74">&#34;30&#34;</span> <span style="color:#a6e22e">velocity=</span><span style="color:#e6db74">&#34;1.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;safety_controller</span> <span style="color:#a6e22e">k_velocity=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">k_position=</span><span style="color:#e6db74">&#34;15&#34;</span>  <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;dynamics</span> <span style="color:#a6e22e">friction=</span><span style="color:#e6db74">&#34;1.0&#34;</span> <span style="color:#a6e22e">damping=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fl_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_wheel_rl_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;-0.059 0.09 0.03&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;mimic</span> <span style="color:#a6e22e">joint=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fl_joint&#34;</span> <span style="color:#a6e22e">multiplier=</span><span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#a6e22e">offset=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#f92672">/&gt;</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;axis</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 1 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;limit</span> <span style="color:#a6e22e">effort=</span><span style="color:#e6db74">&#34;30&#34;</span> <span style="color:#a6e22e">velocity=</span><span style="color:#e6db74">&#34;1.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;safety_controller</span> <span style="color:#a6e22e">k_velocity=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">k_position=</span><span style="color:#e6db74">&#34;15&#34;</span>  <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;dynamics</span> <span style="color:#a6e22e">friction=</span><span style="color:#e6db74">&#34;1.0&#34;</span> <span style="color:#a6e22e">damping=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_wheel_rl_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fl_link&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;-0.042 0 -0.033&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://sphero_rvr_description/meshes/Sphero_Wheel_L.stl&#34;</span> <span style="color:#a6e22e">scale=</span><span style="color:#e6db74">&#34;0.001 0.001 0.001&#34;</span> <span style="color:#f92672">/&gt;</span> 
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/White&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/visual&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.0 0 0.0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;${M_PI/2} 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;cylinder</span> <span style="color:#a6e22e">radius=</span><span style="color:#e6db74">&#34;0.033&#34;</span> <span style="color:#a6e22e">length=</span><span style="color:#e6db74">&#34;0.03&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_wheel_rl_link&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;-0.042 0 -0.033&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://sphero_rvr_description/meshes/Sphero_Wheel_L.stl&#34;</span> <span style="color:#a6e22e">scale=</span><span style="color:#e6db74">&#34;0.001 0.001 0.001&#34;</span> <span style="color:#f92672">/&gt;</span> 
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/White&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/visual&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.0 0 0.0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;${M_PI/2} 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;cylinder</span> <span style="color:#a6e22e">radius=</span><span style="color:#e6db74">&#34;0.033&#34;</span> <span style="color:#a6e22e">length=</span><span style="color:#e6db74">&#34;0.03&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!-- Right Front/Rear Wheel --&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fr_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.059 -0.09 0.03&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 90 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;axis</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 1 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;limit</span> <span style="color:#a6e22e">effort=</span><span style="color:#e6db74">&#34;30&#34;</span> <span style="color:#a6e22e">velocity=</span><span style="color:#e6db74">&#34;1.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;safety_controller</span> <span style="color:#a6e22e">k_velocity=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">k_position=</span><span style="color:#e6db74">&#34;15&#34;</span>  <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;dynamics</span> <span style="color:#a6e22e">friction=</span><span style="color:#e6db74">&#34;1.0&#34;</span> <span style="color:#a6e22e">damping=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fr_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_wheel_rr_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;-0.059 -0.09 0.03&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;mimic</span> <span style="color:#a6e22e">joint=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fr_joint&#34;</span> <span style="color:#a6e22e">multiplier=</span><span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#a6e22e">offset=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#f92672">/&gt;</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;axis</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 1 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;limit</span> <span style="color:#a6e22e">effort=</span><span style="color:#e6db74">&#34;30&#34;</span> <span style="color:#a6e22e">velocity=</span><span style="color:#e6db74">&#34;1.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;safety_controller</span> <span style="color:#a6e22e">k_velocity=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">k_position=</span><span style="color:#e6db74">&#34;15&#34;</span>  <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;dynamics</span> <span style="color:#a6e22e">friction=</span><span style="color:#e6db74">&#34;1.0&#34;</span> <span style="color:#a6e22e">damping=</span><span style="color:#e6db74">&#34;1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_wheel_rr_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_wheel_fr_link&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;-0.042 0 -0.033&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://sphero_rvr_description/meshes/Sphero_Wheel_R.stl&#34;</span> <span style="color:#a6e22e">scale=</span><span style="color:#e6db74">&#34;0.001 0.001 0.001&#34;</span> <span style="color:#f92672">/&gt;</span> 
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/White&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/visual&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.0 0 0.0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;${M_PI/2} 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;cylinder</span> <span style="color:#a6e22e">radius=</span><span style="color:#e6db74">&#34;0.033&#34;</span> <span style="color:#a6e22e">length=</span><span style="color:#e6db74">&#34;0.03&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_wheel_rr_link&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;${negligible_mass * 100 * mm2_to_m2}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;-0.042 0 -0.033&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://sphero_rvr_description/meshes/Sphero_Wheel_R.stl&#34;</span> <span style="color:#a6e22e">scale=</span><span style="color:#e6db74">&#34;0.001 0.001 0.001&#34;</span> <span style="color:#f92672">/&gt;</span> 
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;SpheroRVR/White&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/visual&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.0 0 0.0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;${M_PI/2} 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;cylinder</span> <span style="color:#a6e22e">radius=</span><span style="color:#e6db74">&#34;0.033&#34;</span> <span style="color:#a6e22e">length=</span><span style="color:#e6db74">&#34;0.03&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><p>You have the four wheels associated with the chasis. From here, you can also describe how the wheels spin but I will leave such task to your increasingly able hands.</p>
+<h2 id="launch-file-to-load-in-the-model-to-robot_state_publisher-and-joint_state_publisher">Launch file to load in the model to robot_state_publisher and joint_state_publisher</h2>
+<p>Let&rsquo;s not forget about the launch file although you can bring up all the necessary nodes one-by-one.Please create a new launch file if you have not done so: <code>sphero_rrvr_model.launch.py</code> and paste the following in it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pathlib <span style="color:#f92672">import</span> Path
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch <span style="color:#f92672">import</span> LaunchDescription
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch.substitutions <span style="color:#f92672">import</span> Command
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch_ros.actions <span style="color:#f92672">import</span> Node
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch_ros.substitutions <span style="color:#f92672">import</span> FindPackageShare
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_launch_description</span>():
+</span></span><span style="display:flex;"><span>    pkg_path <span style="color:#f92672">=</span> FindPackageShare(<span style="color:#e6db74">&#39;sphero_rvr_description&#39;</span>)<span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#39;sphero_rvr_description&#39;</span>)
+</span></span><span style="display:flex;"><span>    urdf_dir: Path <span style="color:#f92672">=</span> Path(pkg_path) <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;model&#39;</span>
+</span></span><span style="display:flex;"><span>    xacro_file_path <span style="color:#f92672">=</span> str( urdf_dir <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;sphero_rvr.urdf.xacro&#39;</span> )
+</span></span><span style="display:flex;"><span>    rviz_config_path <span style="color:#f92672">=</span> str( Path(pkg_path) <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;launch&#39;</span> <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;single_robot_test_view.rviz&#39;</span> )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> Path(xacro_file_path)<span style="color:#f92672">.</span>exists(), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;URDF file not found at </span><span style="color:#e6db74">{</span>xacro_file_path<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> Path(xacro_file_path)<span style="color:#f92672">.</span>is_file(), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;URDF file </span><span style="color:#e6db74">{</span>xacro_file_path<span style="color:#e6db74">}</span><span style="color:#e6db74"> is NOT a file&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> LaunchDescription([
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Robot State Publisher Node</span>
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            output<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;screen&#39;</span>,
+</span></span><span style="display:flex;"><span>            parameters<span style="color:#f92672">=</span>[{<span style="color:#e6db74">&#39;robot_description&#39;</span>: Command([<span style="color:#e6db74">&#39;xacro &#39;</span>, xacro_file_path])}],
+</span></span><span style="display:flex;"><span>            arguments<span style="color:#f92672">=</span>[xacro_file_path]
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            output<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;screen&#39;</span>,
+</span></span><span style="display:flex;"><span>            arguments<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;-d&#39;</span>, rviz_config_path]
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    ])
+</span></span></code></pre></div><p>Here we simply have a list of nodes passed in LaunchDescription and return it under the function <code>generate_launch_description</code>.</p>
+<p>Here you may have already discovered that I defined a <code>rviz_config_path</code> and it is fed into Rviz2 as such:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>  Node(
+</span></span><span style="display:flex;"><span>      package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>      executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>      name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>      output<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;screen&#39;</span>,
+</span></span><span style="display:flex;"><span>      arguments<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;-d&#39;</span>, rviz_config_path]
+</span></span><span style="display:flex;"><span>  )
+</span></span></code></pre></div><p>in the form of</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>arguments<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;-d&#39;</span>, rviz_config_path]
+</span></span></code></pre></div><p>which is equivalent to the command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>rviz2 -d <span style="color:#f92672">{</span>whatever/path/to/your/rviz_config<span style="color:#f92672">}</span>.rviz
+</span></span></code></pre></div><p>Of course, replace the argument above with your actual Rviz2 configuration file.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>In this article, we go through the major steps to assemble the different parts of the robot into a whole. Next stop, mount all the sensors and other housing structure onto the rover.</p>
+
+    </div>
+    <div class="post-footer">
+      
+
+      <script src="https://utteranc.es/client.js"
+        repo="megacephalo/megacephalo.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

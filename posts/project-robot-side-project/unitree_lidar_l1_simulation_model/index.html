@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Build the Unitree LiDAR L1 Simulation Model from scratch // Megacephalo&#39;s Tech Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.140.2">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Charly Huang" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.5b1fcc8902588589c4767187402a3c29f8b8d7a6fdef6d9f8f77045bb0d14fee.css" />
+    
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Build the Unitree LiDAR L1 Simulation Model from scratch">
+  <meta name="twitter:description" content="This article belongs to the series “Create Sphero RVR&#43; simulation model” and will walk you through creating your own Unitree L1 LiDAR.
+Source: Unitree 4D LiDAR L1 - Unitree Robotics
+Create the simulation model for Unitree L1 LiDAR Let’s create a ROS 2 description for the LiDAR. I recommend creating a C&#43;&#43; package:
+cd &lt;path/to/your&gt;/ros2_ws/src ros2 pkg create --build-type ament_cmake unitree_lidar_description Remember to replace to your actual workspace path.">
+
+    <meta property="og:url" content="https://megacephalo.github.io/posts/project-robot-side-project/unitree_lidar_l1_simulation_model/">
+  <meta property="og:site_name" content="Megacephalo&#39;s Tech Blog">
+  <meta property="og:title" content="Build the Unitree LiDAR L1 Simulation Model from scratch">
+  <meta property="og:description" content="This article belongs to the series “Create Sphero RVR&#43; simulation model” and will walk you through creating your own Unitree L1 LiDAR.
+Source: Unitree 4D LiDAR L1 - Unitree Robotics
+Create the simulation model for Unitree L1 LiDAR Let’s create a ROS 2 description for the LiDAR. I recommend creating a C&#43;&#43; package:
+cd &lt;path/to/your&gt;/ros2_ws/src ros2 pkg create --build-type ament_cmake unitree_lidar_description Remember to replace to your actual workspace path.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-01-06T20:19:44+08:00">
+    <meta property="article:modified_time" content="2025-01-06T20:19:44+08:00">
+    <meta property="article:tag" content="Robot Side-Project">
+
+
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KR2N7R73Y8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KR2N7R73Y8');
+    </script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://megacephalo.github.io/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
+      <span class="app-header-title">Megacephalo&#39;s Tech Blog</span>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">All posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/about_me">About Me</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/contact_me">Contact Me</a>
+      </nav>
+      <p>The corner to share my learning on robotics and autonoous navigaation</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/Megacephalo" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentColor"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+        
+          <a href="https://www.linkedin.com/in/charlyhuang/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentColor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        
+          <a href="https://www.youtube.com/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-youtube" viewBox="0 0 24 24" fill="currentColor"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Build the Unitree LiDAR L1 Simulation Model from scratch</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Jan 6, 2025
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          6 min read
+        </div>
+        <div>
+          <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <a class="tag" href="https://megacephalo.github.io/tags/robot-side-project/">Robot Side-Project</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>This article belongs to the series &ldquo;<a href="/posts/project-robot-side-project/create_sphero_rvr_simulation_model">Create Sphero RVR+ simulation model</a>&rdquo; and will walk you through creating your own Unitree L1 LiDAR.</p>
+<p><img src="/images/project-robot-side-project/unitree_lidar_l1_simulation_model/unitree_l1_lidar_item_photo_1080x.png" alt="Unitree L1 LiDAR product photo"> <br>
+Source: <a href="https://shop.unitree.com/products/unitree-4d-lidar-l1">Unitree 4D LiDAR L1 - Unitree Robotics</a></p>
+<h1 id="create-the-simulation-model-for-unitree-l1-lidar">Create the simulation model for Unitree L1 LiDAR</h1>
+<p>Let&rsquo;s create a ROS 2 description for the LiDAR. I recommend creating a C++ package:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd &lt;path/to/your&gt;/ros2_ws/src
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ros2 pkg create --build-type ament_cmake unitree_lidar_description
+</span></span></code></pre></div><p>Remember to replace to your actual workspace path.</p>
+<p>Let&rsquo;s build the package first to make sure that it can be built and successfully added to the ROS system data structure:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd &lt;path/to/your&gt;/ros2_ws    <span style="color:#75715e"># back to the root directory of your ROS 2 workspace</span>
+</span></span><span style="display:flex;"><span>colcon build
+</span></span><span style="display:flex;"><span>source &lt;path/to/your&gt;/ros2_ws/install/setup.bash
+</span></span></code></pre></div><p>We calle our package <strong>unitree_lidar_description</strong>. Within the package let&rsquo;s create two new directories: <code>launch</code>, <code>meshes</code> and <code>model</code>.</p>
+<p>In <em>CMakeLists.txt</em> make sure the following lines are uncommented:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span>install(
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">DIRECTORY</span> <span style="color:#e6db74">launch</span> <span style="color:#e6db74">meshes</span> <span style="color:#e6db74">model</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">DESTINATION</span> <span style="color:#e6db74">share/</span><span style="color:#f92672">${</span>PROJECT_NAME<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>such that the files under these directoies are installed and can be found by the ROS system.
+Let&rsquo;s <em>cd</em> into the <code>model</code> directory, create a file <code>unilidar_l1.urdf.xacro</code>. Within the Xacro file, paste the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unlidar_l1&#34;</span> <span style="color:#a6e22e">xmlns:xacro=</span><span style="color:#e6db74">&#34;http://wiki.ros.org/xacro&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unilidar_lidar&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/visual&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertial&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;mass</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.5&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;0.001&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;0.001&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/inertial&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unlidar_imu&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;box</span> <span style="color:#a6e22e">size=</span><span style="color:#e6db74">&#34;0.05 0.05 0.05&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertial&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;mass</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.5&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;0.001&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;0.001&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/inertial&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unilidar_imu_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;unilidar_lidar&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;unlidar_imu&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.0 0.0 0.0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><p>Within this script, we created a &ldquo;robot&rdquo; called <code>unlidar_l1</code>. The robot contains one two frames: <code>unilidar_lidar</code> and <code>unlidar_imu</code> in which the latter is the child node of the former frame. Both edges are associated with a joint <code>unilidar_imu_joint</code>. Within each frame, we can see that the <code>visual</code>, <code>collision</code>, and the <code>inertial</code> are defined. Within the <code>&lt;joint&gt;</code> element, the parent, child, and the spatial relationship of the joint from the parent to the child frames are defined.</p>
+<p>At this point, you can already play with the model as its overall reference frame relationship is defined, but we want to go one extra mile.</p>
+<h2 id="specify-the-mesh">Specify the mesh</h2>
+<p>Since we need either the <strong>STL</strong> or <strong>COLLADA</strong> file to define the meshes, we can either find an already available mesh file to load in our existing URDF, or we can find a STEP file containing the CAD object, and then extract the &ldquo;skin&rdquo; out of it with your favorite CAD software.</p>
+<p>Fortunately, an official CAD file is provided by Unitree. Please visit the page <a href="https://www.unitree.com/download/LiDAR">Download Center L1 - Unitree Robotics</a> and click on <code>Download</code> link for the <strong>L1 3D Model</strong>.</p>
+<p>Once the STEP file is downloaded, open it with your favorite CAD software. I am using <a href="https://www.freecad.org/">FreeCAD</a> to help me export the sensor CAD body into its STL file. I named my STL file as <code>unilidar_l1_mesh.stl</code>. Place the STL file under the <code>meshes</code> directory that we just created in our ROS 2 description package.</p>
+<p>Now head back to the xacro file we just edited, add the line under the <code>&lt;robot&gt;</code> element</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unilidar_mesh&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;package://unitree_lidar_description/meshes/unilidar_l1_mesh.stl&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span></code></pre></div><p>and add this line:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;${unilidar_mesh}&#34;</span> <span style="color:#a6e22e">scale=</span><span style="color:#e6db74">&#34;0.001 0.001 0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span></code></pre></div><p>within the <code>&lt;visual&gt;/&gt;&lt;geometry&gt;</code> and <code>&lt;collision&gt;/&lt;geometry&gt;</code> elements.</p>
+<p>Although we will load the model mesh but it still lacks color. We can define our color by creating a new document named <code>materials.urdf</code> under the <code>model</code> directory, where the <code>unilidar_l1.urdf.xacro</code> lives to facilitate file referencing. We are defining the color RGB codes within this <code>materials.urdf</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;White&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;1 1 1 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;DarkGrey&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.3 0.3 0.3 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;LightGrey&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.8 0.8 0.8 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Black&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0 0 0 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Grey&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.7 0.7 0.7 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Blue&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.0 0.0 0.8 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><p>Let&rsquo;s specify the color of the sensor by adding the second property under the <code>&lt;robot&gt;</code> element:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find unitree_lidar_description)/model/materials.urdf&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span></code></pre></div><p>Notice that the <code>$(find ...)</code> is a handy syntax to automatically acquire the abslute path to the package in the <code>install/.../&lt;package&gt;</code> directory.</p>
+<p>We want to color the whole sensor in dark gray, so let&rsquo;s add the following line under the <code>&lt;visual&gt;</code> element:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;DarkGrey&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span></code></pre></div><p>Now, the whole <code>unilidar_l1.urdf.xacro</code> will look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unlidar_l1&#34;</span> <span style="color:#a6e22e">xmlns:xacro=</span><span style="color:#e6db74">&#34;http://wiki.ros.org/xacro&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unilidar_mesh&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;package://unitree_lidar_description/meshes/unilidar_l1_mesh.stl&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find unitree_lidar_description)/model/materials.urdf&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unilidar_lidar&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;${unilidar_mesh}&#34;</span> <span style="color:#a6e22e">scale=</span><span style="color:#e6db74">&#34;0.001 0.001 0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;DarkGrey&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/visual&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;${unilidar_mesh}&#34;</span> <span style="color:#a6e22e">scale=</span><span style="color:#e6db74">&#34;0.001 0.001 0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertial&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;mass</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.5&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;0.001&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;0.001&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/inertial&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unlidar_imu&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;box</span> <span style="color:#a6e22e">size=</span><span style="color:#e6db74">&#34;0.05 0.05 0.05&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;inertial&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;mass</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.5&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;inertia</span> <span style="color:#a6e22e">ixx=</span><span style="color:#e6db74">&#34;0.001&#34;</span> <span style="color:#a6e22e">ixy=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">ixz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">iyy=</span><span style="color:#e6db74">&#34;0.001&#34;</span> <span style="color:#a6e22e">iyz=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#a6e22e">izz=</span><span style="color:#e6db74">&#34;0.001&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/inertial&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;unilidar_imu_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;unilidar_lidar&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;unlidar_imu&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.0 0.0 0.0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><h2 id="automate-the-model-generation-from-the-urdf-file-with-launch-file">Automate the model generation from the URDF file with launch file</h2>
+<p>Now let&rsquo;s use a handy <strong>launch</strong> file to load the URDF into the <strong>robot_state_publisher</strong>. First <em>cd</em> under the <code>launch</code> directory create the new launch file <code>unilidar_l1.launch.py</code>. Within the launch file, paste the following contnt:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pathlib <span style="color:#f92672">import</span> Path
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch <span style="color:#f92672">import</span> LaunchDescription
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch.actions <span style="color:#f92672">import</span> DeclareLaunchArgument
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch.substitutions <span style="color:#f92672">import</span> Command, LaunchConfiguration
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch_ros.actions <span style="color:#f92672">import</span> Node
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch_ros.substitutions <span style="color:#f92672">import</span> FindPackageShare
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>enable_rviz: bool <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_launch_description</span>():
+</span></span><span style="display:flex;"><span>    pkg_path <span style="color:#f92672">=</span> FindPackageShare(<span style="color:#e6db74">&#39;unitree_lidar_description&#39;</span>)<span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#39;unitree_lidar_description&#39;</span>)
+</span></span><span style="display:flex;"><span>    xacro_file_path <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>pkg_path<span style="color:#e6db74">}</span><span style="color:#e6db74">/model/unilidar_l1.urdf.xacro&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> Path(xacro_file_path)<span style="color:#f92672">.</span>exists(), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;URDF file not found at </span><span style="color:#e6db74">{</span>xacro_file_path<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> Path(xacro_file_path)<span style="color:#f92672">.</span>is_file(), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;URDF file </span><span style="color:#e6db74">{</span>xacro_file_path<span style="color:#e6db74">}</span><span style="color:#e6db74"> is NOT a file&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Reading xacro file: </span><span style="color:#e6db74">{</span>xacro_file_path<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    task_queue <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    task_queue<span style="color:#f92672">.</span>append(
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            output<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;screen&#39;</span>,
+</span></span><span style="display:flex;"><span>            parameters<span style="color:#f92672">=</span>[{<span style="color:#e6db74">&#39;robot_description&#39;</span>: Command([<span style="color:#e6db74">&#39;xacro &#39;</span>, xacro_file_path])}],
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    task_queue<span style="color:#f92672">.</span>append(
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            output<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;screen&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> enable_rviz:
+</span></span><span style="display:flex;"><span>        rviz2_node <span style="color:#f92672">=</span> Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            output<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;screen&#39;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        task_queue<span style="color:#f92672">.</span>append(rviz2_node)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> LaunchDescription(task_queue)
+</span></span></code></pre></div><p>The <code>xacro_file_path</code> paramter holds the path to our URDF file. This file is given to the <em>robot_state_publisher</em> to generate the 3D model. Once joint_state_publisher also join in, we can visualize the model in the visualizer - <code>Rviz2</code>.</p>
+<h2 id="lets-fire-it-up">Let&rsquo;s fire it up</h2>
+<p>Now we can run the launch file and check if the lidar TF tree and model is generated. First, build the package</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd &lt;path/to/your&gt;/ros_ws
+</span></span><span style="display:flex;"><span>colcon build
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Or specify to build just this pacakge</span>
+</span></span><span style="display:flex;"><span>colcon build --packages-select unitree_lidar_description
+</span></span></code></pre></div><p>Make sure to either manuall source <code>&lt;path/to/your&gt;/ros2_ws/install/local_setup.bash</code> or have it already saved in <code>~/.bashrc</code>. At this point I assume that the ROS system can successfully find where this package is.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ros2 launch unitree_lidar_description unilidar_l1.launch.py
+</span></span></code></pre></div><p>and you shall find:</p>
+<p><img src="/images/project-robot-side-project/unitree_lidar_l1_simulation_model/rviz_screenshot_2025_01_06-17_05_02.png" alt="rviz2_unitree_l1_model"></p>
+<h1 id="conclusion">Conclusion</h1>
+<p>In this tutorial you learned how to compose a ROS 2 description package, create the URDF script to specify the TF, collision, and visual models, add the mesh to make the simulation more realistic, and eventually fire up the launch file to load the URDF file into robot_state_pbulsiher and joint_state_publisher to render the 3D model. Eventually, you able to visualize the LiDAR model in Rviz2.</p>
+
+    </div>
+    <div class="post-footer">
+      
+
+      <script src="https://utteranc.es/client.js"
+        repo="megacephalo/megacephalo.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

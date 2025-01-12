@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Create the StereoLabs ZED 2i Simulation Model // Megacephalo&#39;s Tech Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.140.2">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Charly Huang" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.5b1fcc8902588589c4767187402a3c29f8b8d7a6fdef6d9f8f77045bb0d14fee.css" />
+    
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Create the StereoLabs ZED 2i Simulation Model">
+  <meta name="twitter:description" content="This article belongs to the series “Create Sphero RVR&#43; simulation model” and will walk you through the steps to set up a StereoLabs ZED 2i camera simulation model.
+Source: ZED 2i Stereo Camera | StereoLabs Store | StereoLabs
+The short route StereoLabs, the manufacturer of ZED 2i along with other series of the stereo-camera products, has already released the official ROS 2 description packages ready for visualization, which is another bonus point why I chose their product.">
+
+    <meta property="og:url" content="https://megacephalo.github.io/posts/project-robot-side-project/create_zed_2i_simulation_model/">
+  <meta property="og:site_name" content="Megacephalo&#39;s Tech Blog">
+  <meta property="og:title" content="Create the StereoLabs ZED 2i Simulation Model">
+  <meta property="og:description" content="This article belongs to the series “Create Sphero RVR&#43; simulation model” and will walk you through the steps to set up a StereoLabs ZED 2i camera simulation model.
+Source: ZED 2i Stereo Camera | StereoLabs Store | StereoLabs
+The short route StereoLabs, the manufacturer of ZED 2i along with other series of the stereo-camera products, has already released the official ROS 2 description packages ready for visualization, which is another bonus point why I chose their product.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-01-06T20:31:00+08:00">
+    <meta property="article:modified_time" content="2025-01-06T20:31:00+08:00">
+    <meta property="article:tag" content="Robot Side-Project">
+
+
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KR2N7R73Y8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KR2N7R73Y8');
+    </script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://megacephalo.github.io/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
+      <span class="app-header-title">Megacephalo&#39;s Tech Blog</span>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">All posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/about_me">About Me</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/contact_me">Contact Me</a>
+      </nav>
+      <p>The corner to share my learning on robotics and autonoous navigaation</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/Megacephalo" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentColor"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+        
+          <a href="https://www.linkedin.com/in/charlyhuang/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentColor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        
+          <a href="https://www.youtube.com/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-youtube" viewBox="0 0 24 24" fill="currentColor"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Create the StereoLabs ZED 2i Simulation Model</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Jan 6, 2025
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          12 min read
+        </div>
+        <div>
+          <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <a class="tag" href="https://megacephalo.github.io/tags/robot-side-project/">Robot Side-Project</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>This article belongs to the series &ldquo;<a href="/posts/project-robot-side-project/create_sphero_rvr_simulation_model">Create Sphero RVR+ simulation model</a>&rdquo; and will walk you through the steps to set up a StereoLabs ZED 2i camera simulation model.</p>
+<p><img src="/images/project-robot-side-project/create_zed_2i_simulation_model/Zed2ifacedawn_cropped.png" alt="ZED 2i facedown"> <br>
+Source: <a href="https://www.stereolabs.com/en-tw/store/products/zed-2i">ZED 2i Stereo Camera | StereoLabs Store | StereoLabs</a></p>
+<h1 id="the-short-route">The short route</h1>
+<p>StereoLabs, the manufacturer of ZED 2i along with other series of the stereo-camera products, has already released the official ROS 2 description packages ready for visualization, which is another bonus point why I chose their product.</p>
+<p>The following steps are suitable if you only want to evaluate and check how the camera you purchase is doing. Our aim is to run the <code>display_ed_cam_launch.py</code> under the <code>zed-ros2-examples</code> package as it loads in the camera&rsquo;s model from the official URDF file. Let&rsquo;s see how this is done.</p>
+<h2 id="instsall-zed-ros2-wrapper">Instsall zed-ros2-wrapper</h2>
+<p>There is no debian available so we goota install the package in our own ROS 2 workspace.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd &lt;path/to/your&gt;/ros2_ws/src
+</span></span><span style="display:flex;"><span>git clone https://github.com/stereolabs/zed-ros2-wrapper.git
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># or for those who set up the SSH protocol</span>
+</span></span><span style="display:flex;"><span>git clone git@github.com:stereolabs/zed-ros2-wrapper.git
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cd ..
+</span></span><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>rosdep update
+</span></span><span style="display:flex;"><span>rosdep install --from-paths src --ignore-src -r -y <span style="color:#75715e"># install dependencies</span>
+</span></span><span style="display:flex;"><span>colcon build --symlink-install --cmake-args<span style="color:#f92672">=</span>-DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release --parallel-workers <span style="color:#66d9ef">$(</span>nproc<span style="color:#66d9ef">)</span> <span style="color:#75715e"># build the workspace</span>
+</span></span><span style="display:flex;"><span>echo source <span style="color:#66d9ef">$(</span>pwd<span style="color:#66d9ef">)</span>/install/local_setup.bash &gt;&gt; ~/.bashrc <span style="color:#75715e"># automatically source the installation in every new bash (optional)</span>
+</span></span><span style="display:flex;"><span>source ~/.bashrc
+</span></span></code></pre></div><p>For further detail on the installtion, please refer to the repository&rsquo;s <a href="https://github.com/stereolabs/zed-ros2-wrapper/">README</a>.</p>
+<h2 id="install-zed-ros2-examples">Install zed-ros2-examples</h2>
+<p>Similarly, the <code>zed-ros2-examples</code> package has no Debian ready to install and we have to build it from source:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd &lt;path/to/your&gt;/ros2_ws/src
+</span></span><span style="display:flex;"><span>git clone https://github.com/stereolabs/zed-ros2-examples.git
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># or for those who has the SSH set up</span>
+</span></span><span style="display:flex;"><span>git clone git@github.com:stereolabs/zed-ros2-examples.git
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cd ..
+</span></span><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>rosdep install --from-paths src --ignore-src -r -y
+</span></span><span style="display:flex;"><span>colcon build --symlink-install --cmake-args<span style="color:#f92672">=</span>-DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release
+</span></span><span style="display:flex;"><span>source ~/.bashrc
+</span></span></code></pre></div><p>And now we are ready to bring up the camera. Connect the camera to your computer and on insert the command on the terminal:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ros2 launch zed_display_rviz2 display_zed_cam.launch.py camera_model:<span style="color:#f92672">=</span>&lt;camera_model&gt;
+</span></span></code></pre></div><p>Replace <code>&lt;camera_model&gt;</code> with the model of the camera you are using. In this case, we simply replace with <code>zed2i</code>, i.e.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ros2 launch zed_display_rviz2 display_zed_cam.launch.py camera_model:<span style="color:#f92672">=</span>zed2i
+</span></span></code></pre></div><p>Voila.</p>
+<p><img src="/images/project-robot-side-project/create_zed_2i_simulation_model/ZEDM-Rviz.png" alt="ZED2i in Rviz2"> <br>
+Source: <a href="https://github.com/stereolabs/zed-ros2-examples/tree/master/zed_display_rviz2">https://github.com/stereolabs/zed-ros2-examples/tree/master/zed_display_rviz2</a></p>
+<p>We can also integrate the camra model into our URDF file. For instance, If I already have a robot model in the URDF file, then I can simply add the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;my_robot&#34;</span> <span style="color:#a6e22e">xmlns:xacro=</span><span style="color:#e6db74">&#34;http://ros.org/wiki/xacro&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;mesh_dir&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;meshes&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;robotname&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;my_robot&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;M_PI&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;3.1415926535897931&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!-- ZED 2i parameters --&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;camera_name&#34;</span>   <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;zed2i&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;camera_model&#34;</span>  <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;zed2i&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;use_zed_localization&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;custom_baseline&#34;</span>  <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;enable_gnss&#34;</span>   <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;joint_x&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.1&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;joint_y&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;joint_z&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.1&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!-- The most barebone definition of the robot chasis just for reference--&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;-0.017 -0.101 0.017&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!-- The description of other robot parts --&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!-- ZED2i --&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find zed_wrapper)/urdf/zed_macro.urdf.xacro&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:zed_camera</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)&#34;</span> <span style="color:#a6e22e">model=</span><span style="color:#e6db74">&#34;$(arg camera_model)&#34;</span> <span style="color:#a6e22e">custom_baseline=</span><span style="color:#e6db74">&#34;$(arg custom_baseline)&#34;</span> <span style="color:#a6e22e">enable_gnss=</span><span style="color:#e6db74">&#34;$(arg enable_gnss)&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>	    <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.1 0.0 0.0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/xacro:zed_camera&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!-- Add a joint to connect the ZED Camera to the robot --&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:if</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;$(arg use_zed_localization)&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- ZED Localization -&gt; The reference link is &#39;$(arg camera_name)_camera_link&#39; and &#39;base_link&#39; is a child --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;$(arg joint_x) $(arg joint_y) $(arg joint_z)&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/xacro:if&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:unless</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;$(arg use_zed_localization)&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- NO ZED Localization -&gt; &#39;$(arg camera_name)_camera_link&#39; is a child of &#39;base_link&#39; --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;${robotname}_base_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;$(arg joint_x) $(arg joint_y) $(arg joint_z)&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/xacro:unless&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><p>As we can see the lines:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find zed_wrapper)/urdf/zed_macro.urdf.xacro&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;xacro:zed_camera</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)&#34;</span> <span style="color:#a6e22e">model=</span><span style="color:#e6db74">&#34;$(arg camera_model)&#34;</span> <span style="color:#a6e22e">custom_baseline=</span><span style="color:#e6db74">&#34;$(arg custom_baseline)&#34;</span> <span style="color:#a6e22e">enable_gnss=</span><span style="color:#e6db74">&#34;$(arg enable_gnss)&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0.1 0.0 0.0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/xacro:zed_camera&gt;</span>
+</span></span></code></pre></div><p>we need to make sure <code>$(find zed_wrapper)</code> works correctly, as it retrieves the camera&rsquo;s URDF.</p>
+<h1 id="the-longer-route-but-more-customization">The longer route but more customization</h1>
+<p>Since we already have the camera model and driver up and running, we should also be able to isolate the camera&rsquo;s simulation model from the <code>zed-wrapper</code> such that from here on out we do not need satisfy any ZED driver&rsquo;s dependency before being able to bring up the camera model on its own.</p>
+<p>How about we ceate a standalone package for the ZED2i camera alone? First. Let create a <code>zed2i_ros2_description</code> package. And do not worry, you can find the full source code in my <a href="https://github.com/Megacephalo/zed2i_ros2_description">zed2i_ros2_description GitHub repository</a> if you don&rsquo;t know what to do next.</p>
+<p>Create your own <code>zed2i_ros2_description</code> package as such:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd &lt;path/to/your&gt;/ros2_Ws/src
+</span></span><span style="display:flex;"><span>ros2 pkg create --build-type ament_cmake zed2i_ros2_description
+</span></span></code></pre></div><p>Let&rsquo;s build the package first to ensure it can be found by the system.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd &lt;path/to/your&gt;/ros2_Ws
+</span></span><span style="display:flex;"><span>colcon build --packages-select zed2i_ros2_description
+</span></span><span style="display:flex;"><span>source ~/.bashrc
+</span></span></code></pre></div><p>Now under the package directory you just created, <code>mkdir</code> the following diretories: <code>meshes/</code>, <code>model/</code>, <code>launch/</code>. Once these directories are created, in the root <code>CMakeLists.txt</code> of the package add the following lines:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span>install(
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">DIRECTORY</span> <span style="color:#e6db74">launch</span> <span style="color:#e6db74">meshes</span> <span style="color:#e6db74">model</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">DESTINATION</span> <span style="color:#e6db74">share/</span><span style="color:#f92672">${</span>PROJECT_NAME<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>Go to the root directory of the ROS 2 workspace and build the package again. Now you have the description package opened for business.</p>
+<h2 id="place-the-necessary-assets">Place the necessary assets</h2>
+<p>Since mesh rendering is optional, we can first compose our URDF file and see if the TF tree can be created by the <code>robot_state_publisher</code> and <code>joint_State_publisher</code>. Under the directory <code>model/</code>, touch a new URDF file: <code>zed2i_urdf.xacro</code>. Paste the following content in this file as shown below. By the way, I extracted and composed these codes from the official <strong>zed-ros2-wrapper</strong> package. Thank me later!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">&lt;!--
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Copyright 2022 Stereolabs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// you may not use this file except in compliance with the License.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// You may obtain a copy of the License at
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//      http://www.apache.org/licenses/LICENSE-2.0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Unless required by applicable law or agreed to in writing, software
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// See the License for the specific language governing permissions and
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// limitations under the License.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">--&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;stereolabs_camera&#34;</span> <span style="color:#a6e22e">xmlns:xacro=</span><span style="color:#e6db74">&#34;http://ros.org/wiki/xacro&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;M_PI&#34;</span>     <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;3.1415926535897931&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;camera_name&#34;</span>   <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;zed2i&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;camera_model&#34;</span>  <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;zed2i&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;custom_baseline&#34;</span>  <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- If GNSS fusion is enabled the position of the antenna with respect to the camera mount point is required --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;enable_gnss&#34;</span>   <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;gnss_x&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;gnss_y&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;gnss_z&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;baseline&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.12&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;height&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.03&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;bottom_slope&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;screw_offset_x&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;-0.01&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;screw_offset_z&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;optical_offset_x&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;-0.01&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Camera mounting point (the threaded screw hole in the bottom) --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_link&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Camera Center --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${screw_offset_x} 0 ${screw_offset_z}&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/visual&gt;</span>      
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${screw_offset_x} 0 ${screw_offset_z}&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 ${height/2}&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 ${bottom_slope} 0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Left Camera --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_frame&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${optical_offset_x} ${baseline/2} 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_optical_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_optical_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;-${M_PI/2} 0.0 -${M_PI/2}&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_optical_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Right Camera --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_frame&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${optical_offset_x} -${baseline/2} 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_optical_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_optical_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;-${M_PI/2} 0.0 -${M_PI/2}&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_optical_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:if</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;$(arg enable_gnss)&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_gnss_link&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_gnss_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_gnss_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;xacro:insert_block</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;gnss_origin&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/xacro:if&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><p>And under the same directory, also add a new new file to specify the color of the materials: <code>materials.urdf.xacro</code> and paste the following content:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">&lt;!--
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Copyright 2022 Stereolabs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// you may not use this file except in compliance with the License.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// You may obtain a copy of the License at
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//      http://www.apache.org/licenses/LICENSE-2.0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Unless required by applicable law or agreed to in writing, software
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// See the License for the specific language governing permissions and
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// limitations under the License.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">--&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;zed_mat&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.8 0.8 0.8 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;zedm_mat&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0 0 0 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;zed2_mat&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.25 0.25 0.25 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;zed2i_mat&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.25 0.25 0.25 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;zedx_mat&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.25 0.25 0.25 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;zedxm_mat&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.25 0.25 0.25 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;virtual_mat&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;color</span> <span style="color:#a6e22e">rgba=</span><span style="color:#e6db74">&#34;0.25 0.25 0.25 1.0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/material&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><p>Now, let&rsquo;s place the STL file into the package. If you happen to have <code>zed-ros2-wrapper</code> package around, you can find the official STL fle under the path <code>zed-ros2-wrapper/zed-ros2-interfaces/meshes</code>. Copy the STL file and place it under your package under the <code>meshes/</code> directory.</p>
+<p>Now head back to <code>model/zed2i_urdf.xacro</code> and the following lines within the <code>&lt;geometry&gt;</code> element, like such:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;robot</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;stereolabs_camera&#34;</span> <span style="color:#a6e22e">xmlns:xacro=</span><span style="color:#e6db74">&#34;http://ros.org/wiki/xacro&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">&lt;!-- Under the robot element, place the following line --&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;zed2i_mesh&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;package://zed2i_ros2_description/meshes/zed2i.stl&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!-- Move down the document, look for the link = $(arg camera_name)_camera_center element --&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!-- and add the &#34;geometry&#34; element under both visual and collision element and   --&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!-- within &#34;geometry&#34; the &#34;mesh&#34; element to specify the STL file --&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${screw_offset_x} 0 ${screw_offset_z}&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://zed2i_ros2_description/meshes/zed2i.stl&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/visual&gt;</span>      
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${screw_offset_x} 0 ${screw_offset_z}&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://zed2i_ros2_description/meshes/zed2i.stl&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">&lt;!--  --&gt;</span>
+</span></span></code></pre></div><p>You also want to specify the color of the whole camera model. In the same file, add the following lines:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;robot</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;stereolabs_camera&#34;</span> <span style="color:#a6e22e">xmlns:xacro=</span><span style="color:#e6db74">&#34;http://ros.org/wiki/xacro&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">&lt;!-- Similrly, you want to load in the material file you just created --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find zed2i_ros2_description)/model/materials.urdf.xacro&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Camera Center --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${screw_offset_x} 0 ${screw_offset_z}&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://zed2i_ros2_description/meshes/zed2i.stl&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">&lt;!-- Add the material color RIGHT HERE --&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_model)_mat&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/visual&gt;</span>      
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${screw_offset_x} 0 ${screw_offset_z}&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://zed2i_ros2_description/meshes/zed2i.stl&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span></code></pre></div><p>So the whole URDF file would look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">&lt;!--
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Copyright 2022 Stereolabs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// you may not use this file except in compliance with the License.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// You may obtain a copy of the License at
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//      http://www.apache.org/licenses/LICENSE-2.0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Unless required by applicable law or agreed to in writing, software
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// See the License for the specific language governing permissions and
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// limitations under the License.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">--&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;robot</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;stereolabs_camera&#34;</span> <span style="color:#a6e22e">xmlns:xacro=</span><span style="color:#e6db74">&#34;http://ros.org/wiki/xacro&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:include</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;$(find zed2i_ros2_description)/model/materials.urdf.xacro&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;M_PI&#34;</span>     <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;3.1415926535897931&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;zed2i_mesh&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;package://zed2i_ros2_description/meshes/zed2i.stl&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;camera_name&#34;</span>   <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;zed2i&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;camera_model&#34;</span>  <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;zed2i&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;custom_baseline&#34;</span>  <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- If GNSS fusion is enabled the position of the antenna with respect to the camera mount point is required --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;enable_gnss&#34;</span>   <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;gnss_x&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;gnss_y&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:arg</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;gnss_z&#34;</span> <span style="color:#a6e22e">default=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;baseline&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.12&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;height&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.03&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;bottom_slope&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;screw_offset_x&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;-0.01&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;screw_offset_z&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0.0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;optical_offset_x&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;-0.01&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Camera mounting point (the threaded screw hole in the bottom) --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_link&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Camera Center --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;visual&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${screw_offset_x} 0 ${screw_offset_z}&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://zed2i_ros2_description/meshes/zed2i.stl&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;material</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_model)_mat&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/visual&gt;</span>      
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;collision&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${screw_offset_x} 0 ${screw_offset_z}&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;geometry&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;mesh</span> <span style="color:#a6e22e">filename=</span><span style="color:#e6db74">&#34;package://zed2i_ros2_description/meshes/zed2i.stl&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;/geometry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/collision&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 ${height/2}&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 ${bottom_slope} 0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Left Camera --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_frame&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${optical_offset_x} ${baseline/2} 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_optical_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_optical_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;-${M_PI/2} 0.0 -${M_PI/2}&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_left_camera_optical_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Right Camera --&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_frame&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/link&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_center&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;${optical_offset_x} -${baseline/2} 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_optical_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_optical_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;origin</span> <span style="color:#a6e22e">xyz=</span><span style="color:#e6db74">&#34;0 0 0&#34;</span> <span style="color:#a6e22e">rpy=</span><span style="color:#e6db74">&#34;-${M_PI/2} 0.0 -${M_PI/2}&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_right_camera_optical_frame&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;xacro:if</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;$(arg enable_gnss)&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_gnss_link&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;joint</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;$(arg camera_name)_gnss_joint&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;parent</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_camera_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;child</span> <span style="color:#a6e22e">link=</span><span style="color:#e6db74">&#34;$(arg camera_name)_gnss_link&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;xacro:insert_block</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;gnss_origin&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;/joint&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/xacro:if&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
+</span></span></code></pre></div><h2 id="set-up-the-launch-file">Set up the launch file</h2>
+<p>We are almost done so hang in there. Similar to how we set up the LiDAR description launch file, the one for ZED 2i is almost identical. Let&rsquo;s name this launch file as <code>ros2 launch zed2i_ros2_description zed_camera.launch.py</code> and paste the following content in it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pathlib <span style="color:#f92672">import</span> Path
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch <span style="color:#f92672">import</span> LaunchDescription
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch.substitutions <span style="color:#f92672">import</span> Command
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch_ros.actions <span style="color:#f92672">import</span> Node
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> launch_ros.substitutions <span style="color:#f92672">import</span> FindPackageShare
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_launch_description</span>():
+</span></span><span style="display:flex;"><span>    pkg_path <span style="color:#f92672">=</span> FindPackageShare(<span style="color:#e6db74">&#39;zed2i_ros2_description&#39;</span>)<span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#39;zed2i_ros2_description&#39;</span>)
+</span></span><span style="display:flex;"><span>    xacro_file_path <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>pkg_path<span style="color:#e6db74">}</span><span style="color:#e6db74">/model/zed2i_urdf.xacro&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> Path(xacro_file_path)<span style="color:#f92672">.</span>exists(), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;URDF file not found at </span><span style="color:#e6db74">{</span>xacro_file_path<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> Path(xacro_file_path)<span style="color:#f92672">.</span>is_file(), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;URDF file </span><span style="color:#e6db74">{</span>xacro_file_path<span style="color:#e6db74">}</span><span style="color:#e6db74"> is NOT a file&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Reading xacro file: </span><span style="color:#e6db74">{</span>xacro_file_path<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    task_queue <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    task_queue<span style="color:#f92672">.</span>append(
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;robot_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            output<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;screen&#39;</span>,
+</span></span><span style="display:flex;"><span>            parameters<span style="color:#f92672">=</span>[{<span style="color:#e6db74">&#39;robot_description&#39;</span>: Command([<span style="color:#e6db74">&#39;xacro &#39;</span>, xacro_file_path])}],
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    task_queue<span style="color:#f92672">.</span>append(
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;joint_state_publisher&#39;</span>,
+</span></span><span style="display:flex;"><span>            output<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;screen&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    task_queue<span style="color:#f92672">.</span>append(
+</span></span><span style="display:flex;"><span>        Node(
+</span></span><span style="display:flex;"><span>            package<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            executable<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>,
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rviz2&#39;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> LaunchDescription(task_queue)
+</span></span></code></pre></div><p>With this launch file saved, head to the root directory of the workspace, and build the package again.</p>
+<h2 id="fire-it-up">Fire it up</h2>
+<p>Let&rsquo;s run the launch file to load in the model. Use the following command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ros2 launch zed2i_ros2_description zed_camera.launch.py
+</span></span></code></pre></div><p>Rviz2 will be brought up. Before you can actually anything, In the &ldquo;Displays&rdquo; panel on the left, look for the &ldquo;Global options&rdquo; category and expand the drop-down menu &ldquo;Fixed frame&rdquo;. The drop-down menu shows the list of available TF frame. Let&rsquo;s choose the &ldquo;zed2i_cmaera_center&rdquo; frame.</p>
+<p>Next, head down to the bottom-left of the Rviz2 window, click open &ldquo;Add&rdquo; and in the pop-up window, scroll down to double-click on &ldquo;TF&rdquo;. You may see the TF tree appear in Rviz2.</p>
+<p><img src="/images/project-robot-side-project/create_zed_2i_simulation_model/load_in_tf_tree_only.png" alt="Rviz2 TF tree only"></p>
+<p>Once again click &ldquo;Add&rdquo; and in the pop-up window select &ldquo;RobotModel&rdquo;. Expand the RobotModel category in the Displays panel. Notice there is a expandable category &ldquo;Description topic&rdquo;. Click on it, you may see a drop-down menu appears on the right. Click on the drop-down menu and select <code>/robot_description</code>. This way Rviz2 knows where to look for the description that we painstakingly loaded in.</p>
+<p><img src="/images/project-robot-side-project/create_zed_2i_simulation_model/RobotModel_config_rviz_config.png" alt="RobotModel Rviz2 display panel config"></p>
+<p>The model should appear alongside the TF tree (actually zoom in to take a better look).</p>
+<p><img src="/images/project-robot-side-project/create_zed_2i_simulation_model/rviz_zed2i_robotmodel_with_tf.png" alt="ZED 2i TF tree with RobotModel"></p>
+<p>If you want to toggle off the TF tree to have a cleaner look of the robot model, check-off the &ldquo;TF&rdquo; category on the Displays panel.</p>
+<p><img src="/images/project-robot-side-project/create_zed_2i_simulation_model/clean_look_of_zed2i_robotmodel.png" alt="Clean look of the ZED 2i RobotModel"></p>
+<h1 id="conclusion">Conclusion</h1>
+<p>In this article, we noticed that SereoLabs, the company behind ZED 2i and its sister products, has curated a series of off-the-shelf solutions to set up the camera model along with its driver such that the customers do not have to write their own codes from scratch. With the available toolsets, we go over how to integrate the camera model into our own project.</p>
+<p>On the other hand, we also have the option to extract the essential parts of the camera model and create own own description, hence the latter half of this article we discussed how to set up the major files to successfumy lly load in the camera model into Rviz2. The implementation can also be found in my GitHub repository: <a href="https://github.com/Megacephalo/zed2i_ros2_description">Megacephalo/zed2i_ros2_description</a>.</p>
+<h1 id="references">References</h1>
+<p>[1] <a href="https://www.stereolabs.com/docs/ros2/030_rviz2">https://www.stereolabs.com/docs/ros2/030_rviz2</a>                              <br>
+[2] <a href="https://github.com/stereolabs/zed-ros2-examples">https://github.com/stereolabs/zed-ros2-examples</a>                             <br>
+[3] <a href="https://github.com/stereolabs/zed-ros2-wrapper/">https://github.com/stereolabs/zed-ros2-wrapper/</a>                             <br>
+[4] <a href="https://github.com/stereolabs/zed-ros2-examples/tree/master/zed_display_rviz2">https://github.com/stereolabs/zed-ros2-examples/tree/master/zed_display_rviz2</a></p>
+
+    </div>
+    <div class="post-footer">
+      
+
+      <script src="https://utteranc.es/client.js"
+        repo="megacephalo/megacephalo.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

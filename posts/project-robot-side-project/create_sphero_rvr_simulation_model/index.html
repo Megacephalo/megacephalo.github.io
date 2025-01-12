@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Create Sphero RVR&#43; simulation model // Megacephalo&#39;s Tech Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.140.2">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Charly Huang" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.5b1fcc8902588589c4767187402a3c29f8b8d7a6fdef6d9f8f77045bb0d14fee.css" />
+    
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Create Sphero RVR&#43; simulation model">
+  <meta name="twitter:description" content="Where are we? Why and how to simulate our robot from scratch? Now as you have purchased the sensors, the development kit, the battery, and, most importantly, your robot rover / mobile platform, what should you do to “port” it into the virtual world to either visualize the robot model or do some serious simulation with it? After all you cannot develop the algorithms on top of something that is barely depicted in the virtual world.">
+
+    <meta property="og:url" content="https://megacephalo.github.io/posts/project-robot-side-project/create_sphero_rvr_simulation_model/">
+  <meta property="og:site_name" content="Megacephalo&#39;s Tech Blog">
+  <meta property="og:title" content="Create Sphero RVR&#43; simulation model">
+  <meta property="og:description" content="Where are we? Why and how to simulate our robot from scratch? Now as you have purchased the sensors, the development kit, the battery, and, most importantly, your robot rover / mobile platform, what should you do to “port” it into the virtual world to either visualize the robot model or do some serious simulation with it? After all you cannot develop the algorithms on top of something that is barely depicted in the virtual world.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-12-31T02:20:39+08:00">
+    <meta property="article:modified_time" content="2024-12-31T02:20:39+08:00">
+    <meta property="article:tag" content="Robot Side-Project">
+
+
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KR2N7R73Y8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KR2N7R73Y8');
+    </script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://megacephalo.github.io/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
+      <span class="app-header-title">Megacephalo&#39;s Tech Blog</span>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">All posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/about_me">About Me</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/contact_me">Contact Me</a>
+      </nav>
+      <p>The corner to share my learning on robotics and autonoous navigaation</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/Megacephalo" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentColor"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+        
+          <a href="https://www.linkedin.com/in/charlyhuang/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentColor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        
+          <a href="https://www.youtube.com/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-youtube" viewBox="0 0 24 24" fill="currentColor"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Create Sphero RVR&#43; simulation model</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Dec 31, 2024
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          10 min read
+        </div>
+        <div>
+          <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <a class="tag" href="https://megacephalo.github.io/tags/robot-side-project/">Robot Side-Project</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="where-are-we-why-and-how-to-simulate-our-robot-from-scratch">Where are we? Why and how to simulate our robot from scratch?</h1>
+<p>Now as you have purchased the sensors, the development kit, the battery, and, most importantly, your robot rover / mobile platform, what should you do to &ldquo;port&rdquo; it into the virtual world to either visualize the robot model or do some serious simulation with it? After all you cannot develop the algorithms on top of something that is barely depicted in the virtual world.</p>
+<p>Fear not, ROS 2 got you covered with its own reference systems and visualization kits. Let&rsquo;s find out how to develop your robot model from scratch.</p>
+<h1 id="the-scope-of-this-article">The scope of this article</h1>
+<p>In this article we will limit our discussion to the following:</p>
+<ul>
+<li>All within ROS 2 eco-system</li>
+<li>Basic definitions of the key terminologies so we are on the same page</li>
+<li>The major steps that you will take and why</li>
+<li>Walk you through the setup</li>
+</ul>
+<p>And no worries, you do not need to equip with ample knowledge of CAD drawing, though it would become helpful for future cases in which you want to draw the components yourself.</p>
+<h1 id="what-alternatives-are-there">What alternatives are there?</h1>
+<p>There are major robot and sensor makers that provide their off-the-shelf ROS2 description packages so you can simply plug-and-play to display the simulation model in Rviz 2 and whatever simulator you picked. But we are diving into the &ldquo;unfortunate&rdquo; case where we need to device everything from scratch on our own.</p>
+<p>Speaking of simulators, there are some open-source options available to choose from:</p>
+<ul>
+<li>Gazebo (Soon to be deprecated)</li>
+<li><a href="https://docs.ros.org/en/humble/Tutorials/Advanced/Simulators/Webots/Simulation-Webots.html">Webots</a>: Very beginner-friendly</li>
+<li><a href="https://gazebosim.org/api/gazebo/6/">Ignition Gazebo</a>: This is the disstribution compatible to ROS 2 Humble and beyond</li>
+<li><a href="https://unity.com/blog/engine-platform/advance-your-robot-autonomy-with-ros-2-and-unity">Unity</a></li>
+<li>CoppeliaSim (formerly V-REP): Need to use an interface plugin to run CoppeliaSim with ROS 2: <a href="https://github.com/CoppeliaRobotics/simROS2">simROS2</a></li>
+</ul>
+<h2 id="lightweight-alternatives">Lightweight alternatives</h2>
+<ul>
+<li><a href="https://github.com/tuw-robotics/stage_ros2">stage_ros2</a>: a 2D robot simulator</li>
+<li><a href="https://github.com/09ubberboy90/simple_pybullet_ros2">simple_pybullet_ros2</a>: Supported up to ROS 2 Foxy</li>
+</ul>
+<h2 id="specialized-frarmeworks">Specialized frarmeworks</h2>
+<ul>
+<li><a href="https://github.com/clydemcqueen/orca4">Orca4</a>: a set of ROS2 packages that provide basic AUV (Autonomous Underwater Vehicle) functionality for the BlueRobotics BlueROV2. Orca4 runs in <a href="https://gazebosim.org/home">Gazebo Harmonic</a>.</li>
+</ul>
+<h1 id="the-major-next-steps">The major next steps</h1>
+<p>To build a robot model to ease in reference frame conversion and rboot model visualization, you will take the following steps:</p>
+<ol>
+<li>Build up the robot&rsquo;s reference system consisting of different joints and links to associate its various components</li>
+<li>Find the component&rsquo;s meshes from different online or offline sources</li>
+<li>Create ROS 2 descrption package for each components</li>
+<li>Use xacro to specify the components&rsquo; models with URDF scripts. Load the script into <strong>robot_state_publisher</strong> and aided with <strong>joint_state_publisher</strong> to render the 3D model</li>
+<li>Put the components together to form the final robot form factor</li>
+<li>Render the model in Rviz 2</li>
+</ol>
+<p>I will refer to my actual robot&rsquo;s model building as the example throughout this article.</p>
+<h1 id="what-is-a-tf-tree-why-do-we-need-it">What is a TF tree? Why do we need it?</h1>
+<p><img src="/images/project-robot-side-project/create_sphero_rvr_simulation_model/pr2_tf_tree.png" alt="PR2 TF2 tree diagram"> <br>
+Source: <a href="http://wiki.ros.org/tf">tf - ROS Wiki</a></p>
+<p>In robotics, the concept of reference frames from the world to a link on the robot&rsquo;s body is the most essential part of control. Without this concept, the robot will be unable to determine where are its different copmponents, let alone determining where is it relative to its surrouding. Fortunately, roboticicsts had devised the reference frames based on the joint and links on a robot to monitor the positions of each of its parts. But we are talking about a rover! You may exclaimed. Definitely, the robot we are discussing in this article lacks any limbs or head whatsoever, but its wheels, the sensors sticking out of its back are all considered as its &ldquo;limbs&rdquo; defined with joint and links. To keep track of where the different parts of a robot is at in any arbitrary time is not a trivial task in itself, let alone estimating the pose within the world.</p>
+<p>Fortunately, the ROS community had implemented the <code>tf2</code> libraries to automatically calculate the different joints and links of the robot so the developper does not have to, the ROS developers refer the data structure to hold the different robot&rsquo;s components as <strong>TF Tree</strong>. A TF Tree is a hierarhial structure that represents the relationship between different coordinate frame in a robot system. It is crucial for managing spatial transformations, which later we will see, are essentials for robot navigation, sensor data processing, and oerall system coordination. But why does it have to be a <strong>tree</strong> and not a <strong>graph</strong>? If we regard each joint on the robot body as a node linked up by links which are the edges, since the whole tree starts from a single world frame, and from there to derive the different robot with a unique chasis and from there the corresponding joints, we get an acyclic graph or tree. The TF2 imposes that a child node can only be derived from one parent node and that one parent node can possesses multiple child nodes and not the other way around. The abstraction saves the roboticists much headache and make the robot body coordinate clearer not only in a single robot scenario, but multi-robot relative to the world.</p>
+<p><img src="/images/project-robot-side-project/create_sphero_rvr_simulation_model/tf_frames_small-aad19f412fe0075835ff6f1637c9be3d.png" alt="Simple TF2 tree"> <br>
+Source: <a href="https://articulatedrobotics.xyz/tutorials/ready-for-ros/tf/">The Transform System (tf2)</a></p>
+<p>I found a well-written article &ldquo;<a href="https://articulatedrobotics.xyz/tutorials/ready-for-ros/tf/">The Transform System (tf2)</a>&rdquo; that can help you better understand what roles <code>TF2</code> plays in the spatial transformations, especially in the ROS 2 eco-ssytem.</p>
+<h1 id="what-should-our-robots-tf-tree-look-like">What should our robot&rsquo;s TF tree look like?</h1>
+<p>The robot that I assembled consists of the following components:</p>
+<ul>
+<li>Robot rover
+<ul>
+<li>4 wheels</li>
+<li>the chasis</li>
+<li>The mounted housing (can be neglected for this article&rsquo;s discussion)</li>
+</ul>
+</li>
+<li>1 x stereo camera</li>
+<li>1 x 3D LiDAR</li>
+</ul>
+<p>As we are concerned with sensor data collection, the pose estimation of the whole robot, I am bypassing the development kit and the power sstation as it is not relevant for our spatial transformation analysis.</p>
+<p>With the above list, our TF tree is shown in the following figure:</p>
+<p><img src="/images/project-robot-side-project/create_sphero_rvr_simulation_model/sphero_rvr_unlidar_zed2i_tf_tree.png" alt="My robot TF tree"></p>
+<p>As the robot can not yet estimate its relative pose within the world frame, it is missing the &ldquo;map&rdquo; and &ldquo;odom&rdquo; frames in its tree. We will later learn what are the defintions of these two reference frames, what they mean to the robot, and how we can add them into the TF tree.</p>
+<h1 id="what-is-robot_state_publisher-and-joint_state_publisher">What is robot_state_publisher and joint_state_publisher?</h1>
+<p>These are two programs or ROS 2 nodes resposible for publishing the state of a robot&rsquo;s joints, including the following information:</p>
+<ul>
+<li><strong>Current positions</strong>: The angles or displacement of joints</li>
+<li><strong>Velocities</strong>: The rate of change of joint positions</li>
+<li><strong>Efforts</strong>: The torques or forces applied at the joints</li>
+</ul>
+<p>The <strong>joint_state_publisher</strong> focuses on providing detailed information about each joint&rsquo;s state. The <strong>robot_state_publisher</strong>, on the other hand, translates these states into a comprehensive representation of the robot&rsquo;s overall configuration through transforms. Together, they enable effective control, simulation, and visualization in ROS system. Here is a comparison between two programs:</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Feature</strong></th>
+          <th><strong>joint_state_publisher</strong></th>
+          <th><strong>robot_state_publisher</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Function</strong></td>
+          <td>Publishes individual joint states (positions, velocities, efforts)</td>
+          <td>Computes and broadcasts transforms for all robot links based on joint states (forward kinematic)</td>
+      </tr>
+      <tr>
+          <td><strong>Input</strong></td>
+          <td>Directly publishes <code>sensor_msgs/msg/JoinState</code> messages</td>
+          <td>Subscribes to <code>sensor_msgs/msg/JointStates</code> for updates and requires a URDF model</td>
+      </tr>
+      <tr>
+          <td><strong>Output</strong></td>
+          <td>Sends joint state data to other nodes</td>
+          <td>Publishes transforms to <code>tf2</code> for visualization and tracking</td>
+      </tr>
+      <tr>
+          <td><strong>Use case</strong></td>
+          <td>Essential for monitoring joint configurations</td>
+          <td>Crucial for understanding robot pose and link relationships in 3D space</td>
+      </tr>
+  </tbody>
+</table>
+<h1 id="what-is-a-mesh-how-do-we-get-the-meshes-of-the-different-robot-parts">What is a mesh? How do we get the meshes of the different robot parts?</h1>
+<p>A mesh refers to a 3D representation of a robot component, typically derived from CAD (Computer Aided Design) models. These mesh files provides the visual information of how a component of a robot look like. But note that you can still build up the robot reference frames even without the meshes, so these latter are the &ldquo;good to have&rdquo;.</p>
+<p>As mentioned, meshes are use to visually represent the geometric shape of robot parts, allowing for realistic simulations and visualizations. THey are essential for:</p>
+<ul>
+<li>Visualization</li>
+<li>Collision detection</li>
+<li>Robot description: meshes are referred within <strong>URDF</strong> (Unified Robot Description Format) files, which describe the robot&rsquo;s structure including its links and joints.</li>
+</ul>
+<p>The common formats for mesh files are:</p>
+<ul>
+<li>
+<p>STL (Stereo Lithography): A widely used format that represents the surface geometry of a 3D object without color or texture information. Note, since it is no longer an &ldquo;instance&rdquo; or concrete body, you cannot load it into a CAD software and manipulate it as you usually do with concrete bodies.</p>
+</li>
+<li>
+<p>COLLADA (.dae): Another format that can include additional features like texture and colors. Note that this is optional to generate a 3D visual model.</p>
+</li>
+</ul>
+<p>You can obtain both the STL and COLLADA files from the CAD software of your choice. In my case, I normally export STL files from a CAD instance possibly loaded from a STEP file.</p>
+<h1 id="what-is-urdf-what-is-xacro">What is URDF? What is Xacro?</h1>
+<p>Let&rsquo;s go over the two main script languages to instruct the ROS 2 system how to generate the 3D model. The <strong>Unified Robot Description Format</strong> (URDF) and <strong>Xacro</strong> (XML Macros) are two basic components for defining and managing robot model.</p>
+<h2 id="unified-robot-description-format-urdf">Unified Robot Description Format (URDF)</h2>
+<p>URDF is a XML-based file format used to describe the physical and visual properties of any robot component. It outlines the robot&rsquo;s structure including</p>
+<ul>
+<li><strong>Links</strong>: Rigid body that represent parts of the robot</li>
+<li><strong>Joints</strong>: Connections between links that define their relative motion</li>
+<li><strong>Visual representation</strong>: Details about how a robot should look in simulation, here is where the mesh file comes in</li>
+<li><strong>Collision models</strong>: You do not want your robot to become a &ldquo;ghsot car&rdquo;, do you? The collision models provide information necessary for detecting collisions during simulations.</li>
+</ul>
+<p>A typicall URDF document is also hierarchial and nested starting with the <code>&lt;robot&gt;</code> element, which contains <code>&lt;link&gt;</code> and <code>&lt;joint&gt;</code> elements to define the robot configuration.</p>
+<h2 id="xacro-xml-macros">Xacro (XML Macros)</h2>
+<p>Xacro is merely a macro script language that simplifies the creation of URDF files by allowing the users to define reusable components and variables. It enables:</p>
+<ul>
+<li><strong>Macro definitions</strong>: Users can ceate macros for repetitive structures, reducing redundany in the URDF files</li>
+<li><strong>Parametrization</strong>: Configuration constants can be defined once and reused throughout the file, making adjustments easier.</li>
+</ul>
+<p>Essentially, Xacro serves as a more flexible way to generate URDF files, acting like a blueprint that can be expanded into a complete URDF document. We will see soon enoguh.</p>
+<h1 id="lets-rock-n-roll">Let&rsquo;s Rock N Roll!</h1>
+<p>We will create the model for Unitree L1 LiDAR first since it does not come with its own ready-to-use simulation model. Next, we will briefly explain how to import the one for ZED 2i. Finally we will also port in the Sphero RVR+ robot&rsquo;s model. But this is not all. We will put everything together to form our whole robot body.</p>
+<p>We will create a ROS2 package for each of the mentioend components. As a practice or convention, we will place the simulation models in their corresponding ROS 2 package with the name <code>[component]_description</code> to differentiate from the components&rsquo; driver packages.</p>
+<ul>
+<li>
+<h4 id="build-the-unitree-lidar-l1-simulation-model-from-scratchpostsproject-robot-side-projectunitree_lidar_l1_simulation_model"><a href="/posts/project-robot-side-project/unitree_lidar_l1_simulation_model">Build the Unitree LiDAR L1 Simulation Model from scratch</a></h4>
+</li>
+<li>
+<h4 id="create-the-stereolabs-zed-2i-simulation-modelpostsproject-robot-side-projectcreate_zed_2i_simulation_model"><a href="/posts/project-robot-side-project/create_zed_2i_simulation_model">Create the StereoLabs ZED 2i Simulation Model</a></h4>
+</li>
+<li>
+<h4 id="create-the-rovers-modelpostsproject-robot-side-projectcreate_the_rover_model"><a href="/posts/project-robot-side-project/create_the_rover_model">Create the rover&rsquo;s model</a></h4>
+</li>
+<li>
+<h4 id="lets-put-everything-togetherpostsproject-robot-side-projectlets_put_everything_together"><a href="/posts/project-robot-side-project/lets_put_everything_together">Let&rsquo;s put everything together</a></h4>
+</li>
+</ul>
+<h1 id="conclusion">Conclusion</h1>
+<p>In this article we have gone through the basic knowledge of what a reference system is and its purpose and then shifting to how to create, implement, and utilize the reference frame system on ROS 2. This article also holds a series of related posts to go though the simulation model creation of this project&rsquo;s robot as an example of how to use <code>robot_state_publisher</code> and <code>joint_state_publisher</code> to load in the TF tree as well as the visual models so we can have some visual reference of our robot related to its surroundings, which comes handy for future real-time and simulated evaluations. I hope you enjoy the series. There will be more exciting posts of my robotic project coming up so stay tuned.</p>
+<h1 id="references">References</h1>
+<p>[1] <a href="https://kshitijtiwari.com/all-resources/mobile-robots/alternatives-to-ros/">https://kshitijtiwari.com/all-resources/mobile-robots/alternatives-to-ros/</a>                                              <br>
+[2] <a href="https://www.reddit.com/r/ROS/comments/11qkz1i/which_simulator_for_ros2_mobile_robot/">https://www.reddit.com/r/ROS/comments/11qkz1i/which_simulator_for_ros2_mobile_robot/</a>                                    <br>
+[3] <a href="https://qviro.com/product/coppelia-robotics/coppeliasim-coppeliarobotics/alternatives">https://qviro.com/product/coppelia-robotics/coppeliasim-coppeliarobotics/alternatives</a>                                   <br>
+[4] <a href="https://www.linkedin.com/advice/1/how-can-ros-simulation-tools-integrated-other-software-axkpf">https://www.linkedin.com/advice/1/how-can-ros-simulation-tools-integrated-other-software-axkpf</a>                          <br>
+[5] <a href="https://articulatedrobotics.xyz/tutorials/ready-for-ros/gazebo/">https://articulatedrobotics.xyz/tutorials/ready-for-ros/gazebo/</a>                                                         <br>
+[6] <a href="https://answers.ros.org/question/350229/">https://answers.ros.org/question/350229/</a>                                                                                <br>
+[7] <a href="https://github.com/09ubberboy90/ros2_sim_comp">https://github.com/09ubberboy90/ros2_sim_comp</a>                                                                           <br>
+[8] <a href="https://qviro.com/product/open-robotics/gazebo-openrobotics/alternatives">https://qviro.com/product/open-robotics/gazebo-openrobotics/alternatives</a>                                                <br>
+[9] <a href="https://docs.ros.org/en/rolling/Tutorials/Advanced/Simulators/Simulation-Main.html">https://docs.ros.org/en/rolling/Tutorials/Advanced/Simulators/Simulation-Main.html</a>                                      <br>
+[10] <a href="https://www.reddit.com/r/ROS/comments/xx2f12/why_does_tf2_uses_a_tree_instead_of_a_graph/?rdt=32930">https://www.reddit.com/r/ROS/comments/xx2f12/why_does_tf2_uses_a_tree_instead_of_a_graph/?rdt=32930</a>                    <br>
+[11] <a href="https://automaticaddison.com/how-to-model-a-robotic-arm-with-a-urdf-file-ros-2/">https://automaticaddison.com/how-to-model-a-robotic-arm-with-a-urdf-file-ros-2/</a>                                        <br>
+[12] <a href="https://www.youtube.com/watch?v=TJeCpGnX508">https://www.youtube.com/watch?v=TJeCpGnX508</a>                                                                            <br>
+[13] <a href="https://www.waveshare.com/wiki/RoArm-M2-S_ROS2_URDF_Model_Tutorial">https://www.waveshare.com/wiki/RoArm-M2-S_ROS2_URDF_Model_Tutorial</a>                                                     <br>
+[14] <a href="https://www.youtube.com/watch?v=8gzEzhOXkzw">https://www.youtube.com/watch?v=8gzEzhOXkzw</a>                                                                            <br>
+[15] <a href="https://control.ros.org/rolling/doc/ros2_control_demos/example_7/doc/userdoc.html">https://control.ros.org/rolling/doc/ros2_control_demos/example_7/doc/userdoc.html</a>                                      <br>
+[16] <a href="https://discourse.ros.org/t/discuss-tools-and-best-practices-for-3d-robot-assets-urdf-sdformat-cad-etc/36997">https://discourse.ros.org/t/discuss-tools-and-best-practices-for-3d-robot-assets-urdf-sdformat-cad-etc/36997</a>           <br>
+[17] <a href="https://automaticaddison.com/create-and-visualize-a-robotic-arm-with-urdf-ros-2-jazzy/">https://automaticaddison.com/create-and-visualize-a-robotic-arm-with-urdf-ros-2-jazzy/</a>                                 <br>
+[18] <a href="https://docs.omniverse.nvidia.com/isaacsim/latest/ros_ros2_tutorials.html">https://docs.omniverse.nvidia.com/isaacsim/latest/ros_ros2_tutorials.html</a>                                              <br>
+[19] <a href="https://www.roboticsunveiled.com/ros2-joint-state-publisher-and-robot-state-publisher/">https://www.roboticsunveiled.com/ros2-joint-state-publisher-and-robot-state-publisher/</a>                                 <br>
+[20] <a href="https://automaticaddison.com/robot-state-publisher-vs-joint-state-publisher/">https://automaticaddison.com/robot-state-publisher-vs-joint-state-publisher/</a>                                           <br>
+[21] <a href="https://github.com/ros/robot_state_publisher">https://github.com/ros/robot_state_publisher</a>                                                                           <br>
+[22] <a href="https://question4224.rssing.com/chan-62296928/latest.php">https://question4224.rssing.com/chan-62296928/latest.php</a>                                                               <br>
+[23] <a href="http://wiki.ros.org/robot_state_publisher/Tutorials/Using%20the%20robot%20state%20publisher%20on%20your%20own%20robot">http://wiki.ros.org/robot_state_publisher/Tutorials/Using%20the%20robot%20state%20publisher%20on%20your%20own%20robot</a>  <br>
+[24] <a href="https://www.youtube.com/watch?v=9BdAkrX4Xkg">https://www.youtube.com/watch?v=9BdAkrX4Xkg</a>                                                                            <br>
+[25] <a href="https://articulatedrobotics.xyz/tutorials/ready-for-ros/tf/">https://articulatedrobotics.xyz/tutorials/ready-for-ros/tf/</a>                                                            <br>
+[26] <a href="https://robotics.stackexchange.com/questions/83738/joint-state-publisher-and-robot-state-publisher">https://robotics.stackexchange.com/questions/83738/joint-state-publisher-and-robot-state-publisher</a>                     \</p>
+
+    </div>
+    <div class="post-footer">
+      
+
+      <script src="https://utteranc.es/client.js"
+        repo="megacephalo/megacephalo.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
