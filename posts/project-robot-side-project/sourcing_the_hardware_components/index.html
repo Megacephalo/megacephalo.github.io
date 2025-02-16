@@ -4,7 +4,7 @@
     <title>Sourcing the hardware components // Megacephalo&#39;s Tech Blog</title>
     <link rel="shortcut icon" href="/favicon.ico" />
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.140.2">
+    <meta name="generator" content="Hugo 0.143.1">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="Charly Huang" />
     <meta name="description" content="" />
@@ -169,8 +169,7 @@ Functional and non-functional requirements Since the project is about developing
 Source: <a href="https://sphero.com/products/rvr">https://sphero.com/products/rvr</a></p>
 <p>At first of my investigation, I was attracted by the fully assembled mobile rover solutions such as the <a href="https://www.u-buy.com.tw/en/product/JMLY5KY2G-hiwonder-jetson-nano-robot-voice-recognition-modeling-slam-mappingnavigation-with-7in-touchscreen-robotic-car-ai-vision-robotic-kitadvanced-kit-with?srsltid=AfmBOopwj23cKr9pUoxHR5bzxNDkVPzRQ_sdVZeM2h5QlkVfVoMkn0OZIfc&amp;ref=hm-google-redirect">HIWONDER Jetson Nano Robot Voice Recognition Modeling SLAM Mapping/Navigation with 7In Touchscreen Robotic Car AI Vision Robotic Kit (Advanced Kit with SLAMTEC A1 Lidar) </a>, <a href="https://www.ebay.com/itm/166705352196?chn=ps&amp;mkevt=1&amp;mkcid=28&amp;google_free_listing_action=view_item&amp;srsltid=AfmBOoqA0oCsu3--uISPYICBaNPkN6QSLEn9ttV_LeB929SKlTXnJ--KjK8">XIAOR GEEK XR-SLAM Lidar Robot Car with HD Camera ROS Robot Tank Car 8400Mah 12V</a>, or <a href="https://www.u-buy.com.tw/en/product/4LMLESC5E-jetson-nano-ai-robot-ros-tank-kit-transbot-with-somatosensory-depth-camera-3d-scanner-ros-robotics-coding-with-jetson-nano-4gb-sub?srsltid=AfmBOooGaCn0oZSHV-6OLHLKGn4CKTeqsmh6NjPg6BhwmD60cb-x8CZ1gzg&amp;ref=hm-google-redirect">Yahboom&rsquo;s Professional ROS Robotics Coding Kit with AI Functions and 3D Visual Mapping Navigation</a> but after closer inspection, they all have factors that do not meet my expectations. As I want to build a robot running on 3D LiDAR, these solutions could never satisft my needs. I need to source my own components as I want to build a robot that runs on 3D LiDAR instead of a 2D one.</p>
 <p>Hence, I came across <a href="https://sphero.com/products/rvr">Sphero RVR+</a>, an educational rover robot for teenagers. Despite its intended users, the rover exhibits several factors that I find ideal. First, it is designed to allow the user to mount whatever components that accepts UART interface for control. More importantly, Sphero, the robot&rsquo;s manufacturer, offers a Python Public SDK to allow the user to control the rover via signal commands, which in terms offer an endless possibility to the developer to create their own applications to have the rover to collaborate with other sensors. As a developr, I can save the effort to assemble the components and ensure that my robot is stable enough for the future challenges.</p>
-
-    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
       <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/GtJXZzbfk1A?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" title="YouTube video"></iframe>
     </div>
 

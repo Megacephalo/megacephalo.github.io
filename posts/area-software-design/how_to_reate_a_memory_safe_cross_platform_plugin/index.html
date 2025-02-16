@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>How to reate a memory safe cross platform plugin with C&#43;&#43; // Megacephalo&#39;s Tech Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.143.1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Charly Huang" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.5b1fcc8902588589c4767187402a3c29f8b8d7a6fdef6d9f8f77045bb0d14fee.css" />
+    
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How to reate a memory safe cross platform plugin with C&#43;&#43;">
+  <meta name="twitter:description" content="Apart from robotics, I am also interested in how the software architectures behind most software projects play their roles in how the project will head to success or decay. Such design decision may become even more acute when the project at stake involves more than one team member as the cost for orchestration and collaboration will directly affect how the end-product appears to the user and thus would emerge as one of the most important factor that the architect or project manager would be aware of.">
+
+    <meta property="og:url" content="https://megacephalo.github.io/posts/area-software-design/how_to_reate_a_memory_safe_cross_platform_plugin/">
+  <meta property="og:site_name" content="Megacephalo&#39;s Tech Blog">
+  <meta property="og:title" content="How to reate a memory safe cross platform plugin with C&#43;&#43;">
+  <meta property="og:description" content="Apart from robotics, I am also interested in how the software architectures behind most software projects play their roles in how the project will head to success or decay. Such design decision may become even more acute when the project at stake involves more than one team member as the cost for orchestration and collaboration will directly affect how the end-product appears to the user and thus would emerge as one of the most important factor that the architect or project manager would be aware of.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-02-08T12:49:57-08:00">
+    <meta property="article:modified_time" content="2025-02-08T12:49:57-08:00">
+
+
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KR2N7R73Y8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KR2N7R73Y8');
+    </script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://megacephalo.github.io/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
+      <span class="app-header-title">Megacephalo&#39;s Tech Blog</span>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">All posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/about_me">About Me</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/contact_me">Contact Me</a>
+      </nav>
+      <p>The corner to share my learning on robotics and autonoous navigaation</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/Megacephalo" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentColor"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+        
+          <a href="https://www.linkedin.com/in/charlyhuang/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentColor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        
+          <a href="https://www.youtube.com/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-youtube" viewBox="0 0 24 24" fill="currentColor"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">How to reate a memory safe cross platform plugin with C&#43;&#43;</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Feb 8, 2025
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          17 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p><img src="/images/area-software-design/puzzle_image.jpg" alt="puzzle image"></p>
+<p>Apart from robotics, I am also interested in how the software architectures behind most software projects play their roles in how the project will head to success or decay. Such design decision may become even more acute when the project at stake involves more than one team member as the cost for orchestration and collaboration will directly affect how the end-product appears to the user and thus would emerge as one of the most important factor that the architect or project manager would be aware of.</p>
+<p>Hence, I would also like to present my thoughts and implementations of some crucial software architecture designs that I am using in my robotics project. This series of articles are my own reminders and I hope that it would also help in somehow if that is possible.</p>
+<h1 id="introduction">Introduction</h1>
+<p>What is a plugin system? For me, a plugin is a patch to modify the working logic, characteristics, or features of an existing feature in a software codebase. I first got in touch of such concept in the ROS Navigation stack as it enables the developers to add their own mapping layers as well as motion planning algorithms while the addition of a plugin does not require the original code base to be modified to fit the new changes. Another use case is the patches in some videogames as you can mod a game&rsquo;s objects to significantly change the way you play a certain game, which is literally &ldquo;game-changing&rdquo; no puns intended. A plugin system offers the flexibility for the users to modify the codes while at the same time adheres to the best practice of <a href="https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle">Open-Close principle</a>.</p>
+<p>But then the next question becomes: How to make the plugin design memory safe? This is a crucial problem especially in lower to medium level programming languages like C++, which is the language that I want to demonstrate in this article. I have observed that the existing C++ implementation of plugin relies on raw poointers to load in the plugins that makes me question whether it is prone to memory leak if these ointers are mishandled by the developers. Fortunately, we can use the modern C++ smart pointers and <strong>libtools</strong> library to ensure that we can get the best of both worlds. Besides, one good aspect of creating the plugin scheme with <strong>libtools</strong> also properly addresses the cross-platform compatibility so the plugin architecture can work on both POSIX and Windows machines.</p>
+<p>Why cross-platform is a big plus here? As we roboticisists are migrating to ROS 2 as ROS 1 reaches its end of life (EOL) as may 2025 is closing in soon, we can also embrace the fact that ROS2 packages can be executed on both POSIX, embedded, and Windows systems. To be able to run the same plugins, e.g. motion planning algorithms, on the mentioned operating systems, our code should stand against the challenges of different system&rsquo;s environment. Fortunately, <strong>libtools</strong> is the appropriate library to be used to craft our plugin architecture. With this said, outside of the robotic field, the same requirement also applies in one way or the other.</p>
+<p>Now, let&rsquo;s jump straight in on how to craft such plugin architecture. Please make sure you are equipped with the following:</p>
+<ul>
+<li>POSIX machine. I am developing under Ubuntu 22.04 LTS</li>
+<li>C++20</li>
+<li>gcc and g++</li>
+<li>CMake</li>
+<li>A good IDE, e.g. Visual Studio Code</li>
+</ul>
+<h1 id="understanding-the-plugin-architecture">Understanding the plugin architecture</h1>
+<p>There are two types of plugins: Static and Dynamic. I will further elaborate in a new post what differences there are between the static and dynamic libraries. The difference lies in how the plugins are compiled, linked, and loaded. Which type of libraries should be your plugin depends on your design criteria and your actual application.
+For instance, under the ROS2 Navigation stack scenario, the base motion planner would need the motion planning algorithm to be loaded in prior to execution so it can return with the planned path during the whole execution stage. In this case, a static plugin might be ideal since we are not going to change it frequently at runtime. But what if we want to evaluate the differnet motion planning algorithms while the motion planner is running? Then the motion planner faces the scenario that it is impossible to know which plugin will be applied beforehand and therefore a dynamic plugin compilation would be more ideal.</p>
+<p>But how does the plugin interact with the main process? Imagine that your want to build a mod for your favorite videogame such as <a href="https://store.steampowered.com/app/264710/Subnautica/">Subnautica</a>, you learn that each object in the game is a base class whose characteristics and behavior can be modified or &ldquo;decorated&rdquo; by a patch or plugin. Namely, the plugin architecture can be regarded as a mere class inheritance or an actual use case of the <a href="https://refactoring.guru/design-patterns/decorator">Decorator Pattern</a>. In simple terms, the plugin as a derived class possesses the members and methods as the bsae class or the object in the game it wants to decorate, and simply modify the behavior or inherited members within the overriden methods and it effectively chanes the characteristics of the target object.</p>
+<p>But here we don&rsquo;t want to get too far into the videogame modding. Instead, in this article I will only exemplify with a base class and a derived class as its plugin and how this plugin is loaded afterwards by the program&rsquo;s user.</p>
+<h1 id="memory-safety-in-plugin-development">Memory safety in plugin development</h1>
+<p>But before we begin our plugin example, I also want to discuss a little bit about the memory safety issue that plagued low to medium level programming language when coming to pointer manipulations. This topic is also why a lot of software development companies and professionals are inclined to adopt <a href="https://www.rust-lang.org/">Rust</a> as their main framework language instead of continueing with C/C++. However this being said, I still want to take advantage of the smart pointers from the modern C++ standard library to justify that the implementation of plugins through C++ polymorphism can still achieve automatic garbage collection at a slight overhead cost. The smart pointers (<code>std::unqiue_ptr</code> and <code>std::shared_ptr</code>) automatically delete the target memory when it determines that the instance goes out of scope and they play an essential <a href="https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization">Resource Acquisition Is Initialization (RAII)</a> role that raw pointers lack thereof.</p>
+<h1 id="cross-platform-considerations">Cross-platform Considerations</h1>
+<p>As I mentioend previously, plugins are materialized as shared libraries and loaded into the main program. Different operating systems have their corresponding library file foramt: on POSIX systems the libraries end with <code>.so</code> and on Windows with <code>,dll</code> respectively. On top of that, the operating systems have their own library and function to interact with the plugins: <strong>dlopen()</strong> in the POSIX systems and <strong>LoadLibrary</strong> in Windows. Fortunately, <strong>libtools</strong> serves as a light-weight wrapper to make the plugin loading operating-system-agnostic, convenient for my case. [1]</p>
+<p>And for the main code base, we also count with <code>CMake</code> up in our sleeves to leverage its cross-platoform compilation capability.</p>
+<h1 id="designing-the-plugin-interface">Designing the plugin interface</h1>
+<p>Here I am want to exemplify the plugin architecture by having different animals inheriting a base class, or in Java language terms an <em>interface</em>, from which the plugin classes need to inherit from. In order to encapsulate the instantiation process, I will also adopt the <a href="https://refactoring.guru/design-patterns/factory-method">factory pattern</a> to encapsulate the instantiation task and make the code cleaner. With the mentioned procedures, we ensure that the program works as a <a href="https://en.wikipedia.org/wiki/Application_binary_interface">Application Binary Interface (ABI)</a>.</p>
+<h1 id="implementing-the-plugin-systems">Implementing the plugin systems</h1>
+<p>As mentioned, the example will have the animals make their respective sounds. The <code>Animal</code> class serves as the base class and <code>Lion</code> class is the plugin. And don&rsquo;t worry, you can always refer to the repository <a href="https://github.com/Megacephalo/tech-blog-reference-source-codes/tree/main/plugin_architecture_exercise">plugin_architecture_exercise</a> for the actual code if you find yourself lost in the instructions.</p>
+<p>The static class diagram is as follows,</p>
+<p><img src="/images/area-software-design/static_class_diagram.png" alt="plugin example static class diagram"></p>
+<p>First, let&rsquo;s build up the back-bone of the main pipeline. The code is depicted below. The user is expected to pass in the configuration YAML file path, which later would be crucial to let the program know where to find the plugin.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">/* main_pipeline.cpp */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;filesystem&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;yaml-cpp/yaml.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>string print_usage(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> program_name) {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>stringstream stst;
+</span></span><span style="display:flex;"><span>    stst <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Usage: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> program_name <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &lt;config_file&gt;&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> stst.str();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span><span style="color:#f92672">**</span> argv) {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Launching main pipeline&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (argc <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cerr <span style="color:#f92672">&lt;&lt;</span> print_usage( std<span style="color:#f92672">::</span>string(argv[<span style="color:#ae81ff">0</span>]) ) <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> EXIT_FAILURE;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// check if the config file exists
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>filesystem<span style="color:#f92672">::</span>path config_file(argv[<span style="color:#ae81ff">1</span>]); 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (not std<span style="color:#f92672">::</span>filesystem<span style="color:#f92672">::</span>exists(config_file)) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cerr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Config file does not exist: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> config_file <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> EXIT_FAILURE;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (config_file.extension() <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;.yaml&#34;</span>) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cerr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Config file must have a .yaml extension&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> EXIT_FAILURE;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Loading config file: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> config_file <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    YAML<span style="color:#f92672">::</span>Node config <span style="color:#f92672">=</span> YAML<span style="color:#f92672">::</span>LoadFile(config_file.string());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EXIT_SUCCESS;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The configuration YAML file would content similar content as the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># your YAML file to load in the plugin</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">animal_library</span>: <span style="color:#e6db74">&#34;/home/charlyhuang/Documents/plugin_architecture_exercise/lib/liblion.so&#34;</span>
+</span></span></code></pre></div><p>Which holds the key <code>animal_library</code> and the absolute file path as its value.</p>
+<p>Before we start with the plugin interface or the base class specifying how each plugin class should look like, let&rsquo;s deal with the plugin loading pointer:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">/* plugin_core.h */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef _PLUGIN_CORE_H_
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define _PLUGIN_CORE_H_
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;dlfcn.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;memory&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// functor of custom deleter for the dynamic library handle
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">DLCloseDeleter</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">operator</span>() (<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> handle) <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (handle <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nullptr</span>)  dlclose(handle);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">void</span>, DLCloseDeleter<span style="color:#f92672">&gt;</span> DLibHandle;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif </span><span style="color:#75715e">// _PLUGIN_CORE_H_
+</span></span></span></code></pre></div><p>This implementation ensures that the plugin loading and removal process will properly release the plugin&rsquo;s resource once ending its use.</p>
+<p>Next, the interface or the base class to be inherited by the plugin classes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">/* animal.h */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef ANIMAL_H
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define ANIMAL_H
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;memory&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if defined(_MSC_VER)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_EXPORT __declspec(dllexport)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_IMPORT __declspec(dllimport)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#elif defined(__GNUC__)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_EXPORT __attribute__((visibility(&#34;default&#34;)))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_IMPORT __attribute__((visibility(&#34;default&#34;)))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_EXPORT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_IMPORT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifdef BUILDING_ANIMAL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_API ANIMAL_EXPORT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_API ANIMAL_IMPORT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ANIMAL_API</span> Animal {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        Animal() <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>Animal() <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">make_sound</span>() <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">virtual</span> std<span style="color:#f92672">::</span>string name() <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">typedef</span> std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>Animal<span style="color:#f92672">&gt;</span> Ptr;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> ANIMAL_API Animal<span style="color:#f92672">::</span>Ptr create_animal();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif </span><span style="color:#75715e">// ANIMAL_H
+</span></span></span></code></pre></div><p>Let&rsquo;s break down the code. First, the header guards (<code>#ifndef</code>, <code>#define</code>, <code>#endif</code>) prevent multiple inclusion of this header file and avoiding further compilation errors.
+Next, the following piece of code is the export / import macros for shared libraries:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#if defined(_MSC_VER)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_EXPORT __declspec(dllexport)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_IMPORT __declspec(dllimport)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#elif defined(__GNUC__)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_EXPORT __attribute__((visibility(&#34;default&#34;)))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_IMPORT __attribute__((visibility(&#34;default&#34;)))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_EXPORT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_IMPORT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span></code></pre></div><p>This section helps define the macros for <strong>cross-platform shared library support</strong>. <code>__declspec(dlexport)</code> exports symbols when building a <strong>DLL</strong> on Windows. <code>__declspec(dllimport)</code> imports symbols when using a DLL on Windows. <code>__attribute__((visibility(&quot;default&quot;)))</code> does the same action for <strong>Linux / MacOS (GCC / Clang)</strong>. And if none of these compilers are detected, the macros default to <strong>epty</strong>, meaning no special export behavior.</p>
+<p>We can see there are two pure virtual methods that most be implemented by the derived classes, i.e. the plugin classes. Alternatively you can Understand that, apart from implementing the whole functionality that the author sets up to do, a plugin can serves as a decorator of the interface (base class) of an already existing object in the original codebase.</p>
+<p>The next section is the conditional compilation for buiding vs using the library. Let&rsquo;s bring up the code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#ifdef BUILDING_ANIMAL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_API ANIMAL_EXPORT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">#define ANIMAL_API ANIMAL_IMPORT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span></code></pre></div><p><code>BUILDING_ANIMAL</code> is a preprocessor flag set when <strong>compiling</strong> the library. When building the library (<code>BUILDING_ANIMAL</code> is defined), <code>ANIMAL_API</code> expands to <code>ANIMAL_EXPORT</code>, making symbols available for others to use. Conversely, when <strong>using</strong> the library (<code>BUILDING_ANIMAL</code> is not defined), <code>ANIMAL_API</code> expands to <code>ANIMAL_IMPORT</code>, indicating these symbols come from an external shared library.</p>
+<p>With the macros defined, let&rsquo;s see how the abstract base class or interface <code>Animal</code> should be implemented.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ANIMAL_API</span> Animal {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        Animal() <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>Animal() <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">make_sound</span>() <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">virtual</span> std<span style="color:#f92672">::</span>string name() <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">typedef</span> std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>Animal<span style="color:#f92672">&gt;</span> Ptr;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>The <code>ANIMAL_API</code> ensures that the <code>Animal</code> class is properly exprted or imported. <code>Animal</code> is an <strong>abstract class</strong> because it contains two pure virtual functions needed to be implemented by the plugins inheriting from the abstract class.
+The <code>typedef std::unique_ptr&lt;Aniaml&gt; Ptr;</code> is declared to follow a factory pattern.</p>
+<p>Speaking of factory, the following line:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> ANIMAL_API Animal<span style="color:#f92672">::</span>Ptr create_animal();
+</span></span></code></pre></div><p>is the factory function for creating an <code>Animal</code> object in terms of plugin. The expression <code>extern &quot;C&quot;</code> prevents C++ <strong>name mangling</strong>, ensuring the function can be easily linked with C-style function names. This expression is useful for <strong>dynamic loading</strong> of shared libraries (<code>.dll</code>, <code>.so</code>, <code>.dylib</code>). But what about <code>create_animal()</code>? This function is a factory function intended to create an <code>Animal</code> object dynamically. THe implementation will be provided in a <code>.cpp</code> file, typically returning a <code>std::unique_ptr</code> to an instance of a derived class (e.g., ``Dog<code>, </code>Cat`).</p>
+<p>This design allows the <strong>Extensibility</strong> of other plugins e.g. <code>Lion</code>, <code>Dog</code>, or <code>Cat</code> from <code>Animal</code>. This design also ensures <strong>Encapsulation</strong> through a polymorphic interface and promotes <strong>modularity</strong> to load the plugin during runtime.</p>
+<p>Once the interface is declared, let&rsquo;s craft our plugin</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">/* lion.h */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef LION_H
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define LION_H
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;animal.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Lion</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Animal {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        Lion() <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">make_sound</span>() <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">override</span>;
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>string name() <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">override</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">typedef</span> std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>Lion<span style="color:#f92672">&gt;</span> Ptr;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">static</span> Ptr <span style="color:#a6e22e">create</span>() { <span style="color:#66d9ef">return</span> std<span style="color:#f92672">::</span>make_unique<span style="color:#f92672">&lt;</span>Lion<span style="color:#f92672">&gt;</span>(); }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif </span><span style="color:#75715e">// LION_H
+</span></span></span></code></pre></div><p>and its corresponding CPP file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">/* lion.cpp */</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;lion/lion.h&#34;</span><span style="color:#75715e">   
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> Lion<span style="color:#f92672">::</span>make_sound() <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Roar!&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>string Lion<span style="color:#f92672">::</span>name() <span style="color:#66d9ef">const</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Lion&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> Animal<span style="color:#f92672">::</span>Ptr create_animal() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> Lion<span style="color:#f92672">::</span>create();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We are almost there! One last step. Now let&rsquo;s make our main pipeline complete. Get back to the <code>main_pipeline.cpp</code> that appears at the start of the post, let&rsquo;s add the lines to actually load in the plugin.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;filesystem&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;yaml-cpp/yaml.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;dlfcn.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;plugin_core.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;animal.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>Animal<span style="color:#f92672">::</span>Ptr load_animal(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> animalLib, DLibHandle<span style="color:#f92672">&amp;</span> pluginHandle);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>string print_usage(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> program_name) {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>stringstream stst;
+</span></span><span style="display:flex;"><span>    stst <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Usage: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> program_name <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &lt;config_file&gt;&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> stst.str();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span><span style="color:#f92672">**</span> argv) {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Launching main pipeline&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (argc <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cerr <span style="color:#f92672">&lt;&lt;</span> print_usage( std<span style="color:#f92672">::</span>string(argv[<span style="color:#ae81ff">0</span>]) ) <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> EXIT_FAILURE;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// check if the config file exists
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>filesystem<span style="color:#f92672">::</span>path config_file(argv[<span style="color:#ae81ff">1</span>]); 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (not std<span style="color:#f92672">::</span>filesystem<span style="color:#f92672">::</span>exists(config_file)) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cerr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Config file does not exist: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> config_file <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> EXIT_FAILURE;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (config_file.extension() <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;.yaml&#34;</span>) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cerr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Config file must have a .yaml extension&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> EXIT_FAILURE;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Loading config file: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> config_file <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    YAML<span style="color:#f92672">::</span>Node config <span style="color:#f92672">=</span> YAML<span style="color:#f92672">::</span>LoadFile(config_file.string());
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string animalLib <span style="color:#f92672">=</span> config[<span style="color:#e6db74">&#34;animal_library&#34;</span>].as<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span>();
+</span></span><span style="display:flex;"><span>    DLibHandle pluginHandle <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span><span style="display:flex;"><span>    Animal<span style="color:#f92672">::</span>Ptr animal <span style="color:#f92672">=</span> load_animal(animalLib, pluginHandle);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (animal <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cerr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Failed to load animal&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> EXIT_FAILURE;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Animal loaded: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> animal<span style="color:#f92672">-&gt;</span>name() <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;  &#34;</span>;
+</span></span><span style="display:flex;"><span>    animal<span style="color:#f92672">-&gt;</span>make_sound();
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EXIT_SUCCESS;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Animal<span style="color:#f92672">::</span>Ptr load_animal(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> animalLib, DLibHandle<span style="color:#f92672">&amp;</span> pluginHandle) {
+</span></span><span style="display:flex;"><span>    pluginHandle <span style="color:#f92672">=</span> DLibHandle(dlopen(animalLib.c_str(), RTLD_NOW));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pluginHandle <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cerr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Failed to open library: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> dlerror() <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">typedef</span> Animal<span style="color:#f92672">::</span>Ptr (<span style="color:#f92672">*</span>create_animal_t)();
+</span></span><span style="display:flex;"><span>    create_animal_t create_animal <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span><span style="display:flex;"><span>    create_animal <span style="color:#f92672">=</span> <span style="color:#66d9ef">reinterpret_cast</span><span style="color:#f92672">&lt;</span>create_animal_t<span style="color:#f92672">&gt;</span>(dlsym(pluginHandle.get(), <span style="color:#e6db74">&#34;create_animal&#34;</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (create_animal <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cerr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Failed to find create_animal symbol&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">create_animal</span>();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>In the code aboce, the function <code>load_animal()</code> is added into the code, leveraging the memory safety of the smart pointer, we instantiated <code>animal</code> from the plugin we loaded into the program. The function <code>load_animal()</code> is the most crucial key section in the pipeline on how to load the plugin. Let&rsquo;s break it down.</p>
+<p>In the function <strong>load_animal</strong> we have the first line:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>pluginHandle <span style="color:#f92672">=</span> DLibHandle(dlopen(animalLib.c_str(), RTLD_NOW));
+</span></span></code></pre></div><p>This line loads the plugin into the memory. <code>dlopen()</code> is a POSIX function (Gosh we will replace this function in the future. Hang in there) that takes the library path as a C-style string. THe <code>RTLD_NOW</code> flag means &ldquo;resolve all symbols immediately&rdquo;. Once the plugin is loaded into the system memory, a handle is returned and assigned to <strong>pluginHandle</strong>. Note that this handle is already wrapped in a smart pointer to ensure memory safety.</p>
+<p>In the lines</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> Animal<span style="color:#f92672">::</span>Ptr (<span style="color:#f92672">*</span>create_animal_t)();
+</span></span><span style="display:flex;"><span>create_animal_t create_animal <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span></code></pre></div><p>we define a function pointer type <code>create_animal_t</code>. This type represents a function that takes no parameters and returns an <code>Animal::PTr</code> pointer.</p>
+<p>Then comes the critical line</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>create_animal <span style="color:#f92672">=</span> <span style="color:#66d9ef">reinterpret_cast</span><span style="color:#f92672">&lt;</span>create_animal_t<span style="color:#f92672">&gt;</span>(dlsym(pluginHandle.get(), <span style="color:#e6db74">&#34;create_animal&#34;</span>));
+</span></span></code></pre></div><p><code>dlsym</code> is used to look up for the symbol called <code>create_animal</code> in the loaded library. Recall in our previous implementation, create_animal was defined alongside the abstract factory function. If <code>dlsym</code> finds the symbol, the returned symbol is casted to our function pointer type, which in turns looks for the plugin&rsquo;s factory function to create the plugin Animal object.</p>
+<p>In summary, the <code>load_animal</code> function calls the factory function we retrieved from the plugin and returns the created Animal object. So the steps it has taken is as follows,</p>
+<ol>
+<li>Loading in a dynamic library</li>
+<li>Finding a factory function in the plugin</li>
+<li>Using the function to create an instance of our plugin class</li>
+<li>All while providing the proper error handling</li>
+</ol>
+<p>That&rsquo;s all to it! Congratulation! You are done! This completes the skeleton for your plugin architecture.</p>
+<p>Now, let&rsquo;s move on to <code>CMakeLists.txt</code>.</p>
+<h2 id="cmakeliststxt">CMakeLists.txt</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span><span style="color:#75715e"># Root CMakeLists.txt
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>cmake_minimum_required(<span style="color:#e6db74">VERSION</span> <span style="color:#e6db74">3.20</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>project(<span style="color:#e6db74">PluginArchitecture</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">CMAKE_CXX_STANDARD</span> <span style="color:#e6db74">20</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">CMAKE_CXX_STANDARD_REQUIRED</span> <span style="color:#e6db74">ON</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># The built binaries should be placed at bin/ directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set(<span style="color:#e6db74">CMAKE_RUNTIME_OUTPUT_DIRECTORY</span> <span style="color:#f92672">${</span>CMAKE_SOURCE_DIR<span style="color:#f92672">}</span><span style="color:#e6db74">/bin</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># The build libraries should be placed at lib/ directory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set(<span style="color:#e6db74">CMAKE_LIBRARY_OUTPUT_DIRECTORY</span> <span style="color:#f92672">${</span>CMAKE_SOURCE_DIR<span style="color:#f92672">}</span><span style="color:#e6db74">/lib</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">CMAKE_ARCHIVE_OUTPUT_DIRECTORY</span> <span style="color:#f92672">${</span>CMAKE_SOURCE_DIR<span style="color:#f92672">}</span><span style="color:#e6db74">/lib</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Load in yaml-cpp and if it does not exist in the system,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># automatially get it from the internet
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># First try to find yaml-cpp on the system
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>find_package(<span style="color:#e6db74">yaml-cpp</span> <span style="color:#e6db74">QUIET</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>if(<span style="color:#e6db74">NOT</span> <span style="color:#e6db74">yaml-cpp_FOUND</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    message(<span style="color:#e6db74">STATUS</span> <span style="color:#e6db74">&#34;yaml-cpp not found on system, fetching from GitHub...&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    include(<span style="color:#e6db74">FetchContent</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    FetchContent_Declare(
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">yaml-cpp</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">GIT_REPOSITORY</span> <span style="color:#e6db74">https://github.com/jbeder/yaml-cpp.git</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">GIT_TAG</span> <span style="color:#e6db74">yaml-cpp-0.7.0</span>
+</span></span><span style="display:flex;"><span>    )<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    FetchContent_MakeAvailable(<span style="color:#e6db74">yaml-cpp</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>else()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    message(<span style="color:#e6db74">STATUS</span> <span style="color:#e6db74">&#34;Found yaml-cpp on system&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>include_directories(<span style="color:#e6db74">include</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>add_subdirectory(<span style="color:#e6db74">src</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>The <em>CMakeLists.txt</em> above is the main CMakeLists that will orchestrate the other <em>CMakeLists.txt</em> in the project&rsquo;s subdirectories. The CMakeLists.txt here simply wants to let the compiler know that the built binaries will be stored in the <em>bin/</em> directory under the project root directory and libraries and plugins under the <em>lib</em> directories. Next, we use the <code>yaml-cpp</code> library to enable reading from the YAML files. Thanks to <code>FetchContet</code> if there is no existing library in the system then <em>FetchContent</em> can &ldquo;download and install&rdquo; it directly from the internet. Sweet!</p>
+<p>And for the plugin, the CMakeLists.txt resembles the following for our <code>Lion</code> plugin:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span>add_library(<span style="color:#e6db74">lion</span> <span style="color:#e6db74">SHARED</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">lion.cpp</span>
+</span></span><span style="display:flex;"><span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>target_include_directories(<span style="color:#e6db74">lion</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">PUBLIC</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">${</span>CMAKE_SOURCE_DIR<span style="color:#f92672">}</span><span style="color:#e6db74">/include</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">PRIVATE</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">${</span>CMAKE_CURRENT_SOURCE_DIR<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>target_link_libraries(<span style="color:#e6db74">lion</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">PUBLIC</span> <span style="color:#e6db74">animal</span>
+</span></span><span style="display:flex;"><span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>We link the <code>Lion</code> plugin library from the public <code>ANIMAL</code> base class library, and itself is a shared library.</p>
+<p>With the CMakeLists.txt ready, we can build the project. Please insert the commands in a terminal tab:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Generate Makefiles under the &#34;build&#34; directory</span>
+</span></span><span style="display:flex;"><span>cmake -B build
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Build the project</span>
+</span></span><span style="display:flex;"><span>cmake --build build
+</span></span></code></pre></div><p>You will find that all Makefiles and related assets are placed under the <code>build/</code> diectory while the binary or executable files will be generated under the <code>bin</code> directory and libraries under the <code>lib</code> directory. Please adjust the absolute path to the plugin library in your YAML file such that the main pipeline is able to successfully loading it in.</p>
+<p>Perfect, Asuming that you already specified the <code>animal_library</code> value in your YAML file, let&rsquo;s run our program:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># assume you are under the project&#39;s root directory</span>
+</span></span><span style="display:flex;"><span>cd bin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># run the program on Linux</span>
+</span></span><span style="display:flex;"><span>./main_pipeline path/to/your/yaml/file.yaml
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># or run the program on Windows</span>
+</span></span><span style="display:flex;"><span>main_pipeline path<span style="color:#ae81ff">\t</span>o<span style="color:#ae81ff">\y</span>our<span style="color:#ae81ff">\y</span>aml<span style="color:#ae81ff">\f</span>ile.yaml
+</span></span></code></pre></div><p>You should expect to see the follwoing response:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Launching main pipeline
+</span></span><span style="display:flex;"><span>Loading config file: <span style="color:#e6db74">&#34;/path/to/your/yaml/file.yaml&#34;</span>
+</span></span><span style="display:flex;"><span>Animal loaded: Lion  Roar!
+</span></span></code></pre></div><p>Here kist replce the YAML file path example with your actual file path.</p>
+<p>Congratulations! You just created and executed a plugin pipeline! Way to go!</p>
+<h1 id="wait-how-do-you-verify-that-the-plugin-pieline-is-memory-safe">Wait! How do you verify that the plugin pieline is memory safe?</h1>
+<p>Good question. To answer this question, make sure that in a POSIX machine, you have <a href="https://valgrind.org/">Valgrind</a> installed. If not, simply install it with the command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install -y valgrind
+</span></span></code></pre></div><p>Now, run the same program using <em>Valgrind</em> on Linux:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>valgrind ./main_pipeline path/to/your/yaml/file.yaml
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Response</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> Memcheck, a memory error detector
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> Copyright <span style="color:#f92672">(</span>C<span style="color:#f92672">)</span> 2002-2017, and GNU GPL<span style="color:#960050;background-color:#1e0010">&#39;</span>d, by Julian Seward et al.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> Using Valgrind-3.18.1 and LibVEX; rerun with -h <span style="color:#66d9ef">for</span> copyright info
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> Command: ./main_pipeline path/to/your/yaml/file.yaml
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> 
+</span></span><span style="display:flex;"><span>Launching main pipeline
+</span></span><span style="display:flex;"><span>Loading config file: <span style="color:#e6db74">&#34;path/to/your/yaml/file.yaml&#34;</span>
+</span></span><span style="display:flex;"><span>Animal loaded: Lion  Roar!
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> HEAP SUMMARY:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span>     in use at exit: <span style="color:#ae81ff">0</span> bytes in <span style="color:#ae81ff">0</span> blocks
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span>   total heap usage: <span style="color:#ae81ff">319</span> allocs, <span style="color:#ae81ff">319</span> frees, 114,079 bytes allocated
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> All heap blocks were freed -- no leaks are possible
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> For lists of detected and suppressed errors, rerun with: -s
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>6384<span style="color:#f92672">==</span> ERROR SUMMARY: <span style="color:#ae81ff">0</span> errors from <span style="color:#ae81ff">0</span> contexts <span style="color:#f92672">(</span>suppressed: <span style="color:#ae81ff">0</span> from 0<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>The response from Valgrind indicates that all resources are successfully released and thus no memory leak will occur during and after the pipeline execution. Now we make sure that the pipeline is memory safe.</p>
+<h1 id="conclusion-and-key-takeways">Conclusion and key takeways</h1>
+<p>Plugin architecture enables more flexibility and possibility of extending our program&rsquo;s functionality while living to the Open-Close principle. And this architecture is possible thanks to the modularity nature of OOP languages such as C++. And in order to ensure memory-safety, we leverage the smart pointers to ensure memory release even at an adverse situation such as process interruption or in the event of unsuccessful plugin loading or plugin crashing. We also adopt a powerful debugging tool: <em>Valgrind</em> to help us evaluate thet plugin pipeline&rsquo;s posibility of a memory leakage. I hope this article will help you in your future endeaor of developing your own plugin-based software using C++. Happy coding!</p>
+<h1 id="references">References</h1>
+<ul>
+<li>[1] <a href="https://medium.com/@oguzhanoztaskin/building-cross-platform-plugin-architecture-with-libtool-for-dynamic-loading-in-c-c-b2339e1ac143">Building Cross-Platform Plugin Architecture with Libtool for Dynamic Loading in C/C++ - Oguzhan Oztaskin - Medium.com</a></li>
+</ul>
+
+    </div>
+    <div class="post-footer">
+      
+
+      <script src="https://utteranc.es/client.js"
+        repo="megacephalo/megacephalo.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

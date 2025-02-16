@@ -4,7 +4,7 @@
     <title>Create the rover&#39;s model // Megacephalo&#39;s Tech Blog</title>
     <link rel="shortcut icon" href="/favicon.ico" />
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.140.2">
+    <meta name="generator" content="Hugo 0.143.1">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="Charly Huang" />
     <meta name="description" content="" />
@@ -162,7 +162,6 @@ Source: <a href="https://sphero.com/blogs/press-releases/sphero-announces-rvr-pl
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
 </span></span></code></pre></div><p>These material elements define the different colors in their corresponding RGB codes.</p>
-<!-- raw HTML omitted -->
 <h2 id="curate-the-meshes">Curate the meshes</h2>
 <p>Now under the <code>meshes/</code> directory, place all the necessary STL files. You can download these files under <a href="https://git.uibk.ac.at/informatik/stair/ros-sphero-rvr/-/tree/main/sphero_rvr_description?ref_type=heads">ros-sphero-rvr/sphero_rvr_description</a> under the <code>meshes/</code> directory. These STL files are:</p>
 <ul>
@@ -214,7 +213,6 @@ Source: <a href="https://sphero.com/blogs/press-releases/sphero-announces-rvr-pl
 </span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/robot&gt;</span>
 </span></span></code></pre></div><p>As you can see, the color file <code>materials.urdf</code> is already included and we can directly access the various colors defined in that file. The <code>robotname</code> as a property is already set to be <code>Sphero_RVR+</code> but you can name it whatever you please.</p>
 <p>The chasis is treated as a link, which is a node of reference frame in the whole TF tree, and it will be later associated to the global frame in the form of <code>map --&gt; odom --&gt; ${robotname}_base_link</code>. From here on for expression simplicity and consistency, instead of calling it as <code>${robotname}_base_link</code> I will simply put it as <code>base_link</code>.</p>
-<!-- raw HTML omitted -->
 <p>In the <a href="">Turtlebot</a> literature, you will also often encounter that in between the <code>odom</code> and <code>base_link</code> there is an extra TF frame called <code>base_footprint</code> and is assigned to be on the ground directly underneath the robot&rsquo;s chasis. This is just an optional convention and would not affect the analysis of spatial transformation down the road.</p>
 <h2 id="the-wheels-of-the-rover">The wheels of the rover</h2>
 <p>Now I&rsquo;ll exemplify how to add a single wheel to show the syntax mechanism of relating from one link to another. This grants you the advantage to assemble a robot from different URDF files of the components. We will also adopt this approach in later article to put our robot and sensors together as a whole.</p>

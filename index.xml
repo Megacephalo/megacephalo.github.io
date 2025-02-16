@@ -6,8 +6,15 @@
     <description>Recent content on Megacephalo&#39;s Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 10 Jan 2025 11:33:52 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 08 Feb 2025 12:49:57 -0800</lastBuildDate>
     <atom:link href="https://megacephalo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to reate a memory safe cross platform plugin with C&#43;&#43;</title>
+      <link>https://megacephalo.github.io/posts/area-software-design/how_to_reate_a_memory_safe_cross_platform_plugin/</link>
+      <pubDate>Sat, 08 Feb 2025 12:49:57 -0800</pubDate>
+      <guid>https://megacephalo.github.io/posts/area-software-design/how_to_reate_a_memory_safe_cross_platform_plugin/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://megacephalo.github.io/images/area-software-design/puzzle_image.jpg&#34; alt=&#34;puzzle image&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;Apart from robotics, I am also interested in how the software architectures behind most software projects play their roles in how the project will head to success or decay. Such design decision may become even more acute when the project at stake involves more than one team member as the cost for orchestration and collaboration will directly affect how the end-product appears to the user and thus would emerge as one of the most important factor that the architect or project manager would be aware of.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Let&#39;s put everything together</title>
       <link>https://megacephalo.github.io/posts/project-robot-side-project/lets_put_everything_together/</link>

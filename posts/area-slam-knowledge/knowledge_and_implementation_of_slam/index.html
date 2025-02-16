@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en-us">
-  <head>
-    <title>About me // Megacephalo&#39;s Tech Blog</title>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <title>Knowledge and implementation of SLAM // Megacephalo&#39;s Tech Blog</title>
     <link rel="shortcut icon" href="/favicon.ico" />
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.143.1">
+    <meta name="generator" content="Hugo 0.141.0">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="Charly Huang" />
     <meta name="description" content="" />
@@ -14,19 +14,22 @@
     
     
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="About me">
-  <meta name="twitter:description" content="Hi everyone, this is Charly Huang and I am a software engineer interested in autonomous navigation related algorithms and software development. Since little I was fascinated by autonomous robots and this passion has since them motivated me to pursue more advanced degrees and careers in the related fields. As of today, there are still a great number of issues in the autonomous driving realm waiting to be overcome in order to make automated vehicles safe and reliable. To this end,I want to contribute head-on and hands-on to make autonomous driving a true reality in the near future.">
+  <meta name="twitter:title" content="Knowledge and implementation of SLAM">
+  <meta name="twitter:description" content="Introduction This article kicks off the series about my understanding and implementations of Simultaneous Localization and Mapping (SLAM) system and algorithms. This series of articles serves as the academic foundation for the Sphero RVR&#43; side project. Hopefully I can wrap everything up and an organized and clear-to-understand way.
+Table of Contents Foundamentals of SLAM Main schools of SLAM Scan matching Iterative Closest Point, ICP Random Sample Consensus RANSAC Normal Distribution Transform, NDT Stochastic approach - Bayesian-based Probabilistic state estimation the Kalman filter family Pose-graph based Vision based SLAM 2D LiDAR based SLAM 3D LiDAR based SLAM Loop closure Some existing projects Kiss-ICP (2023) Small GICP">
 
-    <meta property="og:url" content="https://megacephalo.github.io/posts/about_me/">
+    <meta property="og:url" content="http://localhost:1313/posts/area-slam-knowledge/knowledge_and_implementation_of_slam/">
   <meta property="og:site_name" content="Megacephalo&#39;s Tech Blog">
-  <meta property="og:title" content="About me">
-  <meta property="og:description" content="Hi everyone, this is Charly Huang and I am a software engineer interested in autonomous navigation related algorithms and software development. Since little I was fascinated by autonomous robots and this passion has since them motivated me to pursue more advanced degrees and careers in the related fields. As of today, there are still a great number of issues in the autonomous driving realm waiting to be overcome in order to make automated vehicles safe and reliable. To this end,I want to contribute head-on and hands-on to make autonomous driving a true reality in the near future.">
+  <meta property="og:title" content="Knowledge and implementation of SLAM">
+  <meta property="og:description" content="Introduction This article kicks off the series about my understanding and implementations of Simultaneous Localization and Mapping (SLAM) system and algorithms. This series of articles serves as the academic foundation for the Sphero RVR&#43; side project. Hopefully I can wrap everything up and an organized and clear-to-understand way.
+Table of Contents Foundamentals of SLAM Main schools of SLAM Scan matching Iterative Closest Point, ICP Random Sample Consensus RANSAC Normal Distribution Transform, NDT Stochastic approach - Bayesian-based Probabilistic state estimation the Kalman filter family Pose-graph based Vision based SLAM 2D LiDAR based SLAM 3D LiDAR based SLAM Loop closure Some existing projects Kiss-ICP (2023) Small GICP">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2024-12-10T13:02:16+08:00">
-    <meta property="article:modified_time" content="2024-12-10T13:02:16+08:00">
-    <meta property="article:tag" content="About_me">
+    <meta property="article:published_time" content="2025-01-12T23:17:09+08:00">
+    <meta property="article:modified_time" content="2025-01-12T23:17:09+08:00">
+    <meta property="article:tag" content="SLAM">
+    <meta property="article:tag" content="Navigation">
 
 
     
@@ -43,7 +46,7 @@
   </head>
   <body>
     <header class="app-header">
-      <a href="https://megacephalo.github.io/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
+      <a href="http://localhost:1313/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
       <span class="app-header-title">Megacephalo&#39;s Tech Blog</span>
       <nav class="app-header-menu">
           <a class="app-header-menu-item" href="/">Home</a>
@@ -78,29 +81,86 @@
       
   <article class="post">
     <header class="post-header">
-      <h1 class ="post-title">About me</h1>
+      <h1 class ="post-title">Knowledge and implementation of SLAM</h1>
       <div class="post-meta">
         <div>
           <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          Dec 10, 2024
+          Jan 12, 2025
         </div>
         <div>
           <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          2 min read
+          1 min read
         </div>
         <div>
           <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-              <a class="tag" href="https://megacephalo.github.io/tags/about_me/">About_me</a>
+              <a class="tag" href="http://localhost:1313/tags/slam/">SLAM</a>
+              <a class="tag" href="http://localhost:1313/tags/navigation/">Navigation</a>
         </div>
       </div>
     </header>
     <div class="post-content">
-      <p><img src="/images/about_me/official_headshot_2024-grayscale_scale_0.4.png" alt="Headshot grayscale"></p>
-<p>Hi everyone, this is Charly Huang and I am a software engineer interested in autonomous navigation related algorithms and software development. Since little I was fascinated by autonomous robots and this passion has since them motivated me to pursue more advanced degrees and careers in the related fields. As of today, there are still a great number of issues in the autonomous driving realm waiting to be overcome in order to make automated vehicles safe and reliable. To this end,I want to contribute head-on and hands-on to make autonomous driving a true reality in the near future.</p>
-<p>I love to solve problems creatively from the big picture all the way down to the details. I take pride in creating beautiful designs and implementing them that not only bring solutions, but also boost maintainability and scalability. I know that every step in crafting the product comes with great responsibility but one inch closer to fulfilling the mission.</p>
-<p>I want to share with the world what I have learned and worked on the autonomous robotics fields and what a better place to host my finding knowledge in a blog.</p>
-<p>You can download a PDF copy of my resume here: <a href="https://bitbucket.org/Megacephal0/charly_resume/src/master/Charly_Huang_resume.pdf">Charly resume</a></p>
-<p>On the other hand, please feel free to direct-message me if you see potential collaborations between us. Thank you.</p>
+      <h1 id="introduction">Introduction</h1>
+<p>This article kicks off the series about my understanding and implementations of Simultaneous Localization and Mapping (SLAM) system and algorithms. This series of articles serves as the academic foundation for the Sphero RVR+ side project. Hopefully I can wrap everything up and an organized and clear-to-understand way.</p>
+<h1 id="table-of-contents">Table of Contents</h1>
+<ul>
+<li>
+<h4 id="foundamentals-of-slam"><a href="">Foundamentals of SLAM</a></h4>
+</li>
+<li>
+<h4 id="main-schools-of-slam"><a href="">Main schools of SLAM</a></h4>
+</li>
+<li>
+<h4 id="scan-matching">Scan matching</h4>
+<ul>
+<li>
+<h4 id="iterative-closest-point-icp"><a href="">Iterative Closest Point, ICP</a></h4>
+</li>
+<li>
+<h4 id="random-sample-consensus-ransac"><a href="">Random Sample Consensus RANSAC</a></h4>
+</li>
+<li>
+<h4 id="normal-distribution-transform-ndt"><a href="">Normal Distribution Transform, NDT</a></h4>
+</li>
+</ul>
+</li>
+<li>
+<h4 id="stochastic-approach---bayesian-based"><a href="">Stochastic approach - Bayesian-based</a></h4>
+<ul>
+<li>
+<h4 id="probabilistic-state-estimation"><a href="">Probabilistic state estimation</a></h4>
+</li>
+<li>
+<h4 id="the-kalman-filter-family"><a href="">the Kalman filter family</a></h4>
+</li>
+</ul>
+</li>
+<li>
+<h4 id="pose-graph-based"><a href="">Pose-graph based</a></h4>
+</li>
+<li>
+<h4 id="vision-based-slam"><a href="">Vision based SLAM</a></h4>
+</li>
+<li>
+<h4 id="2d-lidar-based-slam"><a href="">2D LiDAR based SLAM</a></h4>
+</li>
+<li>
+<h4 id="3d-lidar-based-slam"><a href="">3D LiDAR based SLAM</a></h4>
+</li>
+<li>
+<h4 id="loop-closure"><a href="">Loop closure</a></h4>
+</li>
+<li>
+<h4 id="some-existing-projects">Some existing projects</h4>
+<ul>
+<li>
+<h5 id="kiss-icp-2023"><a href="">Kiss-ICP (2023)</a></h5>
+</li>
+<li>
+<h5 id="small-gicp"><a href="">Small GICP</a></h5>
+</li>
+</ul>
+</li>
+</ul>
 
     </div>
     <div class="post-footer">
