@@ -6,8 +6,29 @@
     <description>Recent content in Tags on Megacephalo&#39;s Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 10 Jan 2025 11:33:52 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 18 Mar 2025 23:18:13 -0700</lastBuildDate>
     <atom:link href="https://megacephalo.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Navigation</title>
+      <link>https://megacephalo.github.io/tags/navigation/</link>
+      <pubDate>Tue, 18 Mar 2025 23:18:13 -0700</pubDate>
+      <guid>https://megacephalo.github.io/tags/navigation/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Odometry</title>
+      <link>https://megacephalo.github.io/tags/odometry/</link>
+      <pubDate>Tue, 18 Mar 2025 23:18:13 -0700</pubDate>
+      <guid>https://megacephalo.github.io/tags/odometry/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>SLAM</title>
+      <link>https://megacephalo.github.io/tags/slam/</link>
+      <pubDate>Tue, 18 Mar 2025 23:18:13 -0700</pubDate>
+      <guid>https://megacephalo.github.io/tags/slam/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Robot Side-Project</title>
       <link>https://megacephalo.github.io/tags/robot-side-project/</link>

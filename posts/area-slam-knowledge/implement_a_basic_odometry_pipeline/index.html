@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Building my first 3D LiDAR odometry: Lessons from the ground up // Megacephalo&#39;s Tech Blog</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.145.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Charly Huang" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.5b1fcc8902588589c4767187402a3c29f8b8d7a6fdef6d9f8f77045bb0d14fee.css" />
+    
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Building my first 3D LiDAR odometry: Lessons from the ground up">
+  <meta name="twitter:description" content="Have you wonder once, “Well, I have read through so many papers, taken so many courses related to SLAM and localization but somehow I am still not sure how to implement the whole code base myself.”. If you had this thought once during your learning process, then you are not alone, my friend. Today I will share my experience of how I had tackled this dilemma myself after years and years and comprehending how pose estimation and SLAM actually works despite how many literature I had gone throughout all this time.">
+
+    <meta property="og:url" content="https://megacephalo.github.io/posts/area-slam-knowledge/implement_a_basic_odometry_pipeline/">
+  <meta property="og:site_name" content="Megacephalo&#39;s Tech Blog">
+  <meta property="og:title" content="Building my first 3D LiDAR odometry: Lessons from the ground up">
+  <meta property="og:description" content="Have you wonder once, “Well, I have read through so many papers, taken so many courses related to SLAM and localization but somehow I am still not sure how to implement the whole code base myself.”. If you had this thought once during your learning process, then you are not alone, my friend. Today I will share my experience of how I had tackled this dilemma myself after years and years and comprehending how pose estimation and SLAM actually works despite how many literature I had gone throughout all this time.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-03-18T23:18:13-07:00">
+    <meta property="article:modified_time" content="2025-03-18T23:18:13-07:00">
+    <meta property="article:tag" content="SLAM">
+    <meta property="article:tag" content="Navigation">
+    <meta property="article:tag" content="Odometry">
+
+
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KR2N7R73Y8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KR2N7R73Y8');
+    </script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://megacephalo.github.io/"><img class="app-header-avatar" src="/images/avatar_headshot.png" alt="Charly Huang" /></a>
+      <span class="app-header-title">Megacephalo&#39;s Tech Blog</span>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">All posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/about_me">About Me</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/contact_me">Contact Me</a>
+      </nav>
+      <p>The corner to share my learning on robotics and autonoous navigaation</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/Megacephalo" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentColor"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+        
+          <a href="https://www.linkedin.com/in/charlyhuang/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentColor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        
+          <a href="https://www.youtube.com/" target="_blank" rel="noreferrer noopener me">
+            <svg class="icon icon-brand-youtube" viewBox="0 0 24 24" fill="currentColor"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Building my first 3D LiDAR odometry: Lessons from the ground up</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Mar 18, 2025
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          18 min read
+        </div>
+        <div>
+          <svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <a class="tag" href="https://megacephalo.github.io/tags/slam/">SLAM</a>
+              <a class="tag" href="https://megacephalo.github.io/tags/navigation/">Navigation</a>
+              <a class="tag" href="https://megacephalo.github.io/tags/odometry/">Odometry</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <p>Have you wonder once, &ldquo;Well, I have read through so many papers, taken so many courses related to SLAM and localization but somehow I am still not sure how to implement the whole code base myself.&rdquo;. If you had this thought once during your learning process, then you are not alone, my friend. Today I will share my experience of how I had tackled this dilemma myself after years and years and comprehending how pose estimation and SLAM actually works despite how many literature I had gone throughout all this time.</p>
+<p>For now, let&rsquo;s start simple. My aim is to be able to build up a framework that I can visualize the results of running odometry through a public dataset. I want to lay down the groundwork to be able to run a benchmark, and based on the evaluations to iterate on improvement the current implementation. Hopefully, I can get a pretty a grasp of SLAM by the end of the whole journey.</p>
+<p>So, sit back and relax, we are about to begin.</p>
+<h1 id="background">Background</h1>
+<p>So why do we bother to come up with creating and running an odometry in the first place? To answer this, we have to define what is an odometry. And don&rsquo;t worry if your text editor consider this a wrongy spelled word because it isn&rsquo;t. This word is composed of two Greek word - <em>odos</em> meaning &ldquo;route&rdquo;, and <em>metron</em> means &ldquo;measure&rdquo;. Odometry, therefore, is any type of appraoch to estimate using motion sensors to estimate change in position over time [1]. The most straight forward odometry that you may be first taught at the robotics 101 is to deduce the change in pose of your robot by counting how many wheel spins there were in any given time since the robot set off for a casual stroll. And for legged robots and drones, there are other alternatives to estimate the poses. One of these options is to deduce from the 3D lidar point clouds. Today I want to implement an odometry based on the point clouds. There are three advantages adopting a 3D LiDAR odometry compared to other types of odometry:</p>
+<ol>
+<li>Laser depth readings from a 3D LiDAR are straight-forward in terms of measurements and the point cloud resolution of higher than some of the radar</li>
+<li>3D LiDAR odometry does not necessarily rely on other motion sensors to estimate the changes in pose, which is convenient to employ for non-wheeled platforms or can contribute to higher pose estimation precision.</li>
+<li>3D LiDAR sensor can provide a conitnuous stream of point clouds which offer more information of the surrouding than the scans coming from a 2D LiDAR, which in turn only offer a planar surrounding depth reading.</li>
+</ol>
+<h1 id="the-implementation">The implementation</h1>
+<p>I will define the problem and explain how I implement the application to address it.</p>
+<h2 id="define-the-problem">Define the problem</h2>
+<p>I once remember that in my first job as a software engineer working to develop the navigation software on an automated guided vehicle (AGV) fleet, the leader of our R&amp;D team once asked the very question: &ldquo;why can&rsquo;t we just just count the wheels spins and determine how far the vehicle goes?&rdquo; Well, this was actually a valid observation if the real-world isn&rsquo;t that cruel to us. In any real-world scenario, there are discrepancies and uncertainty that comes with the readings from the sensors. For instance, to count the spins that a wheel makes we rely on either mechanical or optical encoders which may yields numbers that are not identical nor crispy all the time, let alone factoring in the discrepancy in readings causing from the wheel friction against the ground. Hence, the farther the vehicle travels, the errors from the encoders add up along time and eventually the deduction of how much distance a vhiecle moved in the space becomes all the less credulous the farther it goes. So the problem boils down to: How to estimate the change of the ego-pose, i.e. the position of the robot in question, by observing the change in the latest observation from the sensor (which is the LiDAR in our case) compared to observation the robot gathered from previous instance(s). Notice that I mentioned from the previous instance(s) and not just a mere previous observation? Because we have the possibility to take into account any previous observation into question to help solve the pose estimtaion problem. And Once we know the poses of the ehicle or robot in question, it is easy to overlap all the observed frames or scans to build a single global map. But what is this map used for? We can use it to determine the vehicle&rsquo;s position next time when we come around the same area. Hence, we are setting ourselves up to solve the chicken-egg problem of localization and mapping; a sort of catch 22 if you will: In order to know where we are, we need a map; but we can only create a map if we always know where we are.</p>
+<p>Here, let me define some key tereminologies to facilitate the coming explanations.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Terminology</th>
+          <th>Defnition</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Frame</td>
+          <td>The point cloud observed in one single time instance</td>
+      </tr>
+      <tr>
+          <td>timestamp</td>
+          <td>The time marked down as either UTC or any arbitrry time</td>
+      </tr>
+      <tr>
+          <td>Scan</td>
+          <td>Here will be the synonym of frame</td>
+      </tr>
+      <tr>
+          <td>Point cloud</td>
+          <td>A computer science&rsquo;s abstract data structure to hold multiple spatial coordinates known as points</td>
+      </tr>
+      <tr>
+          <td>pose</td>
+          <td>The position of an object, agent, or robot in the space or world</td>
+      </tr>
+      <tr>
+          <td>ego-pose</td>
+          <td>Same as pose but emphasizes more on the agent or robot&rsquo;s point of view</td>
+      </tr>
+      <tr>
+          <td>state</td>
+          <td>The position, orientation, and any other attributes you want to include that an agent, vhiecle, or robot holds in a particular instance in time</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="appraoch-and-methodology">Appraoch and methodology</h2>
+<p>Relying on 3D LiDAR point clouds as the input for an odometry is an interesting task that I am fascinated about. Point cloud per se is a relatively new sensor readings that offer crispier perception of the environment but due to its massive size holding the depth readings, it is also challenging to process the sensor readings known as points and make sense out of them. 3D LiDAR SLAM is still an ongoing esearch topic in robotics and many areas to ccome up with a simple, elegant and efficient algorithm to leverage the massive information that point clouds offer to create a reliable odometry and eventually utterly propose a plausible answer to the SLAM problem.</p>
+<p>Let&rsquo;s talk about the big picture before we dive into the implementation. In my understanding of SLAM and odometry, we can break the pipeline down into the following steps:</p>
+<ol>
+<li>
+<p>Input sensor reading pre-processing. This includes denoising, normalizing, downsampling, merging readings from different sensors or tranform the whole inputs under a determined reference frame.</p>
+</li>
+<li>
+<p>In terms of sensor readings as a sequence or stream, we can do a frame-by-frame scan-matching to estimate how much the robot has moved. This is where the core idea of odometry lies.</p>
+</li>
+<li>
+<p>[Optional] Adjust the transitions from one pose to the next in a local fashion, by bundling a couple of frames at a time, such that the estimated poses are more &ldquo;organic&rdquo; and accurate to counter the estimation error accumulated as the robot goes along in time.</p>
+</li>
+</ol>
+<p>For each of the mentioned steps, there are a lot of sub-topics and optimization proposition that can be proposed and discussed. But for the scope of this article, we will leave these discussion for later and merely focus on implementing a working pipeline. Although this being said, I still want to lay down the backbone of the pipeline to make it possible to swap in different modules for the mentioned steps to compare how well each proposition is doing. My high-level architectural plan is as follows,</p>
+<p><img src="/images/area-SLAM-knowledge/basic_slam_pipeline_python_static_class_diagram.png" alt="Static class diagram showing the software architecture">
+<em>Fig 1. The high-level architecture of the basic odometry</em></p>
+<h2 id="tools-and-setups">Tools and setups</h2>
+<p>Since I want to craft a rough prototype to verify that at least my understand works in reality, I will use the following tools:</p>
+<p><strong>Programming Language</strong></p>
+<ul>
+<li>Python 3.10+</li>
+</ul>
+<p><strong>Modules or libraries</strong></p>
+<ul>
+<li>Numpy (equivalent to Eigen in C++)</li>
+<li>open3d</li>
+<li>small_gicp: We are leveraging the almost real-time efficiency since this project is built on highly optimized multithreaded and GPU lifted C++ codebase</li>
+<li><a href="https://github.com/uoip/pangolin">pangolin</a>: You gotta install and setup python binding module from source. Just follow the instructions on the project&rsquo;s README.md and you be good.</li>
+<li>other odometry libraries out there, e.g. <a href="https://pypi.org/project/kiss-icp/">kiss_icp</a> (<a href="https://github.com/PRBonn/kiss-icp">GitHub repo</a>)</li>
+</ul>
+<h2 id="coding-it-up">Coding it up</h2>
+<p>In this article I have implemented an odometry relying purely on 3D LiDAR point clouds. The dataset used in the following example is the world-famous <a href="https://www.cvlibs.net/datasets/kitti/eval_odometry.php">KITTI Velodyne dataset</a>[2]. The dataset was recorded back in 2012 and is already more than 10 years old however it is still widely used - definitely a good example of being old but gold! A big shout out to the Karlsruhe Institute of Technology team for recording, curating, and releasing these series of benchmark datasets for the whole research and professional communities to use free of charge.
+Getting back to the odometry, I want to reveal only the key parts of the code snippet while omiting the auxiliary ones. If you want to browse the full code, please visit my repository at <a href="">basic-slam-pipeline-python - GitHub</a>.</p>
+<p>The code is as follows,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> argparse
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pathlib <span style="color:#f92672">import</span> Path
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Dataset parsing</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> data_processing.data_parser_interface <span style="color:#f92672">import</span> Data_Parser_Interface
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> data_processing.kitti_velodyne_dataset_parser <span style="color:#f92672">import</span> KITTI_Velodyne_Dataset_Parser
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Scan matching</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> scan_matching.scan_matcher_interface <span style="color:#f92672">import</span> Scan_matcher_interface
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> data_processing.coordinate_transformations <span style="color:#f92672">import</span> voxelize_cloud, transform_cloud
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> scan_matching.small_gicp <span style="color:#f92672">import</span> Small_gicp
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> scan_matching.my_gicp <span style="color:#f92672">import</span> My_GICP
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> scan_matching.global_map_manager <span style="color:#f92672">import</span> Global_map_manager
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># visualizers</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> visualization.open3d_visualizer <span style="color:#f92672">import</span> PointCloudVisualizer
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> visualization.pangolin_visualizer <span style="color:#f92672">import</span> Pangolin_visualizer, RED
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__<span style="color:#f92672">==</span><span style="color:#e6db74">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># (Ommited code)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Parse the point clouds</span>
+</span></span><span style="display:flex;"><span>    bin_files <span style="color:#f92672">=</span> [file <span style="color:#66d9ef">for</span> file <span style="color:#f92672">in</span> dataset_dir<span style="color:#f92672">.</span>iterdir() <span style="color:#66d9ef">if</span> file<span style="color:#f92672">.</span>suffix <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;.bin&#39;</span>]
+</span></span><span style="display:flex;"><span>    bin_files <span style="color:#f92672">=</span> sorted(bin_files)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;There are in total </span><span style="color:#e6db74">{</span>len(bin_files)<span style="color:#e6db74">}</span><span style="color:#e6db74"> point cloud files&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>up_to_frame <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Running the pipeline up to frame </span><span style="color:#e6db74">{</span>args<span style="color:#f92672">.</span>up_to_frame<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Parsing the dataset...&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    dataset_parser: Data_Parser_Interface <span style="color:#f92672">=</span> KITTI_Velodyne_Dataset_Parser()
+</span></span><span style="display:flex;"><span>    clouds <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>up_to_frame <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        clouds <span style="color:#f92672">=</span> dataset_parser<span style="color:#f92672">.</span>parse_in_batch(bin_files[:args<span style="color:#f92672">.</span>up_to_frame])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        clouds <span style="color:#f92672">=</span> dataset_parser<span style="color:#f92672">.</span>parse_in_batch(bin_files)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Successfully parsed </span><span style="color:#e6db74">{</span>len(clouds)<span style="color:#e6db74">}</span><span style="color:#e6db74"> frames&#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#ae81ff">50</span> <span style="color:#f92672">*</span> <span style="color:#e6db74">&#39;-&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Run scan matching...&#39;</span>)
+</span></span><span style="display:flex;"><span>    scan_matcher: Scan_matcher_interface <span style="color:#f92672">=</span> Small_gicp()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># scan_matcher: Scan_matcher_interface = My_GICP()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    scan_matcher<span style="color:#f92672">.</span>_voxel_size <span style="color:#f92672">=</span> args<span style="color:#f92672">.</span>voxel_size
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    T_world_lidar <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>identity(<span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>    trajectory <span style="color:#f92672">=</span> [T_world_lidar]
+</span></span><span style="display:flex;"><span>    prev_cloud: np<span style="color:#f92672">.</span>ndarray <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    map_manager <span style="color:#f92672">=</span> Global_map_manager()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    viz <span style="color:#f92672">=</span> Pangolin_visualizer()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> frame_idx, cloud <span style="color:#f92672">in</span> enumerate(clouds):
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Processing frame </span><span style="color:#e6db74">{</span>frame_idx <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#e6db74">}</span><span style="color:#e6db74">...&#39;</span>)
+</span></span><span style="display:flex;"><span>            voxelized_cloud <span style="color:#f92672">=</span> voxelize_cloud(cloud[:, :<span style="color:#ae81ff">3</span>], args<span style="color:#f92672">.</span>voxel_size)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            ground_truth_poses <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span> <span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>ground_truth <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span> <span style="color:#66d9ef">else</span> ground_truth_poses
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> frame_idx <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>                scan_matcher<span style="color:#f92672">.</span>set_target(voxelized_cloud)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># Scan-to-scan</span>
+</span></span><span style="display:flex;"><span>                prev_cloud <span style="color:#f92672">=</span> voxelized_cloud
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                map_manager<span style="color:#f92672">.</span>append_frame_cloud(voxelized_cloud)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                viz<span style="color:#f92672">.</span>draw_frame_cloud(pointcloud<span style="color:#f92672">=</span>voxelized_cloud, trajectory<span style="color:#f92672">=</span>trajectory, at_idx<span style="color:#f92672">=</span>frame_idx, gt_poses<span style="color:#f92672">=</span>ground_truth_poses)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                map_manager<span style="color:#f92672">.</span>append_frame_cloud(voxelized_cloud)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            scan_matcher<span style="color:#f92672">.</span>set_source(voxelized_cloud)
+</span></span><span style="display:flex;"><span>            scan_matcher<span style="color:#f92672">.</span>set_target(prev_cloud)
+</span></span><span style="display:flex;"><span>            T_world_lidar <span style="color:#f92672">=</span> scan_matcher<span style="color:#f92672">.</span>estimate()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            trajectory<span style="color:#f92672">.</span>append(T_world_lidar)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            frame_cloud <span style="color:#f92672">=</span> transform_cloud(voxelized_cloud[:, :<span style="color:#ae81ff">3</span>], T_world_lidar)
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            map_manager<span style="color:#f92672">.</span>append_frame_cloud(frame_cloud)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># scan-to-scan</span>
+</span></span><span style="display:flex;"><span>            prev_cloud <span style="color:#f92672">=</span> voxelized_cloud
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            viz<span style="color:#f92672">.</span>draw_frame_cloud(pointcloud<span style="color:#f92672">=</span>frame_cloud, trajectory<span style="color:#f92672">=</span>trajectory, at_idx<span style="color:#f92672">=</span>frame_idx, gt_poses<span style="color:#f92672">=</span>ground_truth_poses)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> err:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Error: </span><span style="color:#e6db74">{</span>err<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Visualize the global map</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Visualizing the global map...&#39;</span>)
+</span></span><span style="display:flex;"><span>    viz<span style="color:#f92672">.</span>hold_on_one_frame(map_manager<span style="color:#f92672">.</span>numpy_global_map(), trajectory, len(trajectory) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, gt_poses<span style="color:#f92672">=</span>ground_truth_poses)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># (Ommitted code)</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Done&#39;</span>)
+</span></span></code></pre></div><p>Let&rsquo;s break it down.</p>
+<h3 id="data-loading">Data Loading</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Parse the point clouds</span>
+</span></span><span style="display:flex;"><span>bin_files <span style="color:#f92672">=</span> [file <span style="color:#66d9ef">for</span> file <span style="color:#f92672">in</span> dataset_dir<span style="color:#f92672">.</span>iterdir() <span style="color:#66d9ef">if</span> file<span style="color:#f92672">.</span>suffix <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;.bin&#39;</span>]
+</span></span><span style="display:flex;"><span>bin_files <span style="color:#f92672">=</span> sorted(bin_files)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;There are in total </span><span style="color:#e6db74">{</span>len(bin_files)<span style="color:#e6db74">}</span><span style="color:#e6db74"> point cloud files&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>up_to_frame <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Running the pipeline up to frame </span><span style="color:#e6db74">{</span>args<span style="color:#f92672">.</span>up_to_frame<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Parsing the dataset...&#39;</span>)
+</span></span><span style="display:flex;"><span>dataset_parser: Data_Parser_Interface <span style="color:#f92672">=</span> KITTI_Velodyne_Dataset_Parser()
+</span></span><span style="display:flex;"><span>clouds <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>up_to_frame <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>    clouds <span style="color:#f92672">=</span> dataset_parser<span style="color:#f92672">.</span>parse_in_batch(bin_files[:args<span style="color:#f92672">.</span>up_to_frame])
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    clouds <span style="color:#f92672">=</span> dataset_parser<span style="color:#f92672">.</span>parse_in_batch(bin_files)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Successfully parsed </span><span style="color:#e6db74">{</span>len(clouds)<span style="color:#e6db74">}</span><span style="color:#e6db74"> frames&#39;</span>)
+</span></span></code></pre></div><p>This section:</p>
+<ul>
+<li>Collects all binary point cloud files (.bin) from the dataset directory.</li>
+<li>Sorts them to ensure sequential processing</li>
+<li>Creates a parser for the KITTI Velodyne dataset format</li>
+<li>Allows processing a subset of frames with the up_to_frame parameter</li>
+<li>Parses the binary files into point cloud arrays for further processing</li>
+</ul>
+<h3 id="setting-up-scan-matching-and-data-structures">Setting up scan-matching and data structures</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Run scan matching...&#39;</span>)
+</span></span><span style="display:flex;"><span>scan_matcher: Scan_matcher_interface <span style="color:#f92672">=</span> Small_gicp()
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># scan_matcher: Scan_matcher_interface = My_GICP()</span>
+</span></span><span style="display:flex;"><span>scan_matcher<span style="color:#f92672">.</span>_voxel_size <span style="color:#f92672">=</span> args<span style="color:#f92672">.</span>voxel_size
+</span></span><span style="display:flex;"><span>T_world_lidar <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>identity(<span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>trajectory <span style="color:#f92672">=</span> [T_world_lidar]
+</span></span><span style="display:flex;"><span>prev_cloud: np<span style="color:#f92672">.</span>ndarray <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>map_manager <span style="color:#f92672">=</span> Global_map_manager()
+</span></span><span style="display:flex;"><span>viz <span style="color:#f92672">=</span> Pangolin_visualizer()
+</span></span></code></pre></div><p>Here I initialize the key components for odometry:</p>
+<ul>
+<li>The scan matcher (using Small_gicp implementation, with My_GICP as an alternative option)</li>
+<li>Setting the voxel size parameter for downsampling point clouds</li>
+<li>Creating an identity matrix as the initial transformation (starting pose)</li>
+<li>Initializing an empty trajectory list with the initial pose</li>
+<li>Setting up a map manager to build the global point cloud map</li>
+<li>Creating a visualizer to display results during processing</li>
+</ul>
+<h3 id="the-main-processing-loop">The main processing loop</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> frame_idx, cloud <span style="color:#f92672">in</span> enumerate(clouds):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Processing frame </span><span style="color:#e6db74">{</span>frame_idx <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#e6db74">}</span><span style="color:#e6db74">...&#39;</span>)
+</span></span><span style="display:flex;"><span>        voxelized_cloud <span style="color:#f92672">=</span> voxelize_cloud(cloud[:, :<span style="color:#ae81ff">3</span>], args<span style="color:#f92672">.</span>voxel_size)
+</span></span><span style="display:flex;"><span>        ground_truth_poses <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span> <span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>ground_truth <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span> <span style="color:#66d9ef">else</span> ground_truth_poses
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> frame_idx <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            scan_matcher<span style="color:#f92672">.</span>set_target(voxelized_cloud)
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># Scan-to-scan</span>
+</span></span><span style="display:flex;"><span>            prev_cloud <span style="color:#f92672">=</span> voxelized_cloud
+</span></span><span style="display:flex;"><span>            map_manager<span style="color:#f92672">.</span>append_frame_cloud(voxelized_cloud)
+</span></span><span style="display:flex;"><span>            viz<span style="color:#f92672">.</span>draw_frame_cloud(pointcloud<span style="color:#f92672">=</span>voxelized_cloud, trajectory<span style="color:#f92672">=</span>trajectory, 
+</span></span><span style="display:flex;"><span>                                at_idx<span style="color:#f92672">=</span>frame_idx, gt_poses<span style="color:#f92672">=</span>ground_truth_poses)
+</span></span><span style="display:flex;"><span>            map_manager<span style="color:#f92672">.</span>append_frame_cloud(voxelized_cloud)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        scan_matcher<span style="color:#f92672">.</span>set_source(voxelized_cloud)
+</span></span><span style="display:flex;"><span>        scan_matcher<span style="color:#f92672">.</span>set_target(prev_cloud)
+</span></span><span style="display:flex;"><span>        T_world_lidar <span style="color:#f92672">=</span> scan_matcher<span style="color:#f92672">.</span>estimate()
+</span></span><span style="display:flex;"><span>        trajectory<span style="color:#f92672">.</span>append(T_world_lidar)
+</span></span><span style="display:flex;"><span>        frame_cloud <span style="color:#f92672">=</span> transform_cloud(voxelized_cloud[:, :<span style="color:#ae81ff">3</span>], T_world_lidar)
+</span></span><span style="display:flex;"><span>        map_manager<span style="color:#f92672">.</span>append_frame_cloud(frame_cloud)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># scan-to-scan</span>
+</span></span><span style="display:flex;"><span>        prev_cloud <span style="color:#f92672">=</span> voxelized_cloud
+</span></span><span style="display:flex;"><span>        viz<span style="color:#f92672">.</span>draw_frame_cloud(pointcloud<span style="color:#f92672">=</span>frame_cloud, trajectory<span style="color:#f92672">=</span>trajectory, 
+</span></span><span style="display:flex;"><span>                            at_idx<span style="color:#f92672">=</span>frame_idx, gt_poses<span style="color:#f92672">=</span>ground_truth_poses)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> err:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Error: </span><span style="color:#e6db74">{</span>err<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span></code></pre></div><p>This is the heart of the odometry system. The convention is to have the take your current frame as the <code>source</code> point cloud (or frame) and the previous frame or the generated map so far as your <code>target</code>. For each frame:</p>
+<ol>
+<li>First frame (frame_idx == 0):</li>
+</ol>
+<ul>
+<li>Set the first cloud as the target for scan matching</li>
+<li>Store it as both the previous cloud and add it to the global map</li>
+<li>Visualize the initial point cloud and trajectory</li>
+<li>That&rsquo;s it. Move on to the next frame</li>
+</ul>
+<ol start="2">
+<li>Subsequent frames:</li>
+</ol>
+<ul>
+<li>Voxelize (downsample) the current point cloud</li>
+<li>Set up the scan matching between current cloud (source) and previous cloud (target)</li>
+<li>Estimate the transformation matrix (T_world_lidar) using the scan matcher</li>
+<li>Add the new transformation to the trajectory</li>
+<li>Transform the current cloud to the global coordinate system</li>
+<li>Add the transformed cloud to the global map</li>
+<li>Update the previous cloud for the next iteration</li>
+<li>Visualize the current state</li>
+</ul>
+<p>The scan-to-scan approach means we&rsquo;re aligning each new frame with the immediately preceding frame, which is simpler but can accumulate drift over time compared to scan-to-map approaches.</p>
+<h3 id="key-technical-concepts-in-this-implementation">Key technical concepts in this implementation</h3>
+<ul>
+<li><strong>Voxelization</strong>: Downsampling point clouds to reduce computational load while preserving structural information.</li>
+<li><strong>Scan Matching</strong>: Aligning consecutive point clouds to determine the relative motion between frames.</li>
+<li><strong>GICP (Generalized Iterative Closest Point)</strong>: The algorithm used for scan matching that extends ICP to consider surface normal information.</li>
+</ul>
+<ol start="4">
+<li><strong>Trajectory Estimation</strong>: Building a sequence of transformation matrices that represent the vehicle&rsquo;s path.</li>
+<li><strong>Global Map Buildin</strong>g: Accumulating transformed point clouds into a consistent global representation.</li>
+</ol>
+<p>Now, let&rsquo;s dive it to how small_gicp process the state estimation. The following code is the adoption of the example code from the <strong>small_gicp</strong> repository and is the only approach to works without divergence:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> small_gicp
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> typing <span style="color:#f92672">import</span> Tuple, Any
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> .scan_matcher_interface <span style="color:#f92672">import</span> Scan_matcher_interface
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NUM_THREADS <span style="color:#f92672">=</span> <span style="color:#ae81ff">7</span>
+</span></span><span style="display:flex;"><span>VOXEL_SIZE <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.25</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Small_gicp</span>(Scan_matcher_interface):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_numThreads: int <span style="color:#f92672">=</span> NUM_THREADS
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_voxel_size: float <span style="color:#f92672">=</span> VOXEL_SIZE
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_T_last_current: np<span style="color:#f92672">.</span>ndarray <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>identity(<span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_T_world_lidar: np<span style="color:#f92672">.</span>ndarray <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>identity(<span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_target_state: Tuple[np<span style="color:#f92672">.</span>ndarray, small_gicp<span style="color:#f92672">.</span>KdTree] <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_source</span>(self, source: np<span style="color:#f92672">.</span>ndarray)<span style="color:#f92672">-&gt;</span><span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_source_cloud <span style="color:#f92672">=</span> source[:, :<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_target</span>(self, target)<span style="color:#f92672">-&gt;</span><span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_target_cloud <span style="color:#f92672">=</span> target[:, :<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">estimate</span>(self)<span style="color:#f92672">-&gt;</span>np<span style="color:#f92672">.</span>ndarray:
+</span></span><span style="display:flex;"><span>        downsampled, kd_tree <span style="color:#f92672">=</span> small_gicp<span style="color:#f92672">.</span>preprocess_points(self<span style="color:#f92672">.</span>_source_cloud, self<span style="color:#f92672">.</span>_voxel_size, num_threads<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_numThreads)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_target_state <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>_target_state <span style="color:#f92672">=</span> (downsampled, kd_tree)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_T_world_lidar
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        result <span style="color:#f92672">=</span> small_gicp<span style="color:#f92672">.</span>align(
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>_target_state[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>            downsampled,
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>_target_state[<span style="color:#ae81ff">1</span>],
+</span></span><span style="display:flex;"><span>            init_T_target_source<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_T_last_current,
+</span></span><span style="display:flex;"><span>            num_threads<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_numThreads
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_T_last_current <span style="color:#f92672">=</span> result<span style="color:#f92672">.</span>T_target_source
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_T_world_lidar <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_T_world_lidar <span style="color:#f92672">@</span> result<span style="color:#f92672">.</span>T_target_source
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_target_state <span style="color:#f92672">=</span> (downsampled, kd_tree)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_T_world_lidar
+</span></span></code></pre></div><p>I want to mention one observation before diving into the code. In my adoption of the <code>small_gicp</code> module as the key odometry algorithm, I&rsquo;ve tested the raw input point cloud appraoch but the KD tree, as shown in the snippet above, has been the only one that consistently delivers reliable estimamtions throughout the whole dataset. Let me walk you through the code and explains why it works. Let&rsquo;s focus on the core part:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">estimate</span>(self)<span style="color:#f92672">-&gt;</span>np<span style="color:#f92672">.</span>ndarray:
+</span></span><span style="display:flex;"><span>    downsampled, kd_tree <span style="color:#f92672">=</span> small_gicp<span style="color:#f92672">.</span>preprocess_points(self<span style="color:#f92672">.</span>_source_cloud, self<span style="color:#f92672">.</span>_voxel_size, num_threads<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_numThreads)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_target_state <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_target_state <span style="color:#f92672">=</span> (downsampled, kd_tree)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_T_world_lidar
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> small_gicp<span style="color:#f92672">.</span>align(
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_target_state[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>        downsampled,
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_target_state[<span style="color:#ae81ff">1</span>],
+</span></span><span style="display:flex;"><span>        init_T_target_source<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_T_last_current,
+</span></span><span style="display:flex;"><span>        num_threads<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_numThreads
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>_T_last_current <span style="color:#f92672">=</span> result<span style="color:#f92672">.</span>T_target_source
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>_T_world_lidar <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_T_world_lidar <span style="color:#f92672">@</span> result<span style="color:#f92672">.</span>T_target_source
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>_target_state <span style="color:#f92672">=</span> (downsampled, kd_tree)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_T_world_lidar
+</span></span></code></pre></div><p>This is where the magic happens. Let&rsquo;s break it down:</p>
+<ol>
+<li><strong>Preprocessing the source cloud</strong>:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>downsampled, kd_tree <span style="color:#f92672">=</span> small_gicp<span style="color:#f92672">.</span>preprocess_points(self<span style="color:#f92672">.</span>_source_cloud, self<span style="color:#f92672">.</span>_voxel_size, num_threads<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_numThreads)
+</span></span></code></pre></div><p>The current frame or point cloud is downsampled with the specified resolution <code>voxel_size</code>. Downsampling the incoming point cloud reduces computation load. The input cloud is also saved in a KD tree which helps in correspondence matching later on.</p>
+<ol start="2">
+<li><strong>Handling the first frame</strong></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_target_state <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>_target_state <span style="color:#f92672">=</span> (downsampled, kd_tree)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_T_world_lidar
+</span></span></code></pre></div><p>For the first frame, there is no previous cloud to align with, so I simply cache the preprocessed cloud and its KD-tree while returning the initiaal pose, in this case is the world&rsquo;s origin expressed as an identity matrix.</p>
+<ol start="3">
+<li><strong>Aligning point clouds</strong></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>result <span style="color:#f92672">=</span> small_gicp<span style="color:#f92672">.</span>align(
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>_target_state[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>    downsampled,
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>_target_state[<span style="color:#ae81ff">1</span>],
+</span></span><span style="display:flex;"><span>    init_T_target_source<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_T_last_current,
+</span></span><span style="display:flex;"><span>    num_threads<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_numThreads
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>This is actally a wrapper function to the related C++ function. The <code>align</code> function used here is one of polymorphic functions that take in this particular set of arguments:</p>
+<ul>
+<li>target cloud</li>
+<li>source cloud</li>
+<li>the source KD-tree</li>
+<li>initial guess as a 4x4 transformation matrix</li>
+<li>number of threads for parallel computation</li>
+</ul>
+<p>So, I pass in the following:</p>
+<ul>
+<li>The cached target (previous) point cloud</li>
+<li>The downsampled source (current) point cloud</li>
+<li>The KD-tree from the target point cloud for efficient correspondence finding</li>
+<li>The previous transformation as an initial guess to warm-start the alignment</li>
+<li>number of threads</li>
+</ul>
+<ol start="4">
+<li><strong>Updating transformation</strong></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>self<span style="color:#f92672">.</span>_T_last_current <span style="color:#f92672">=</span> result<span style="color:#f92672">.</span>T_target_source
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>_T_world_lidar <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_T_world_lidar <span style="color:#f92672">@</span> result<span style="color:#f92672">.</span>T_target_source
+</span></span></code></pre></div><p>I store the relative transformation for use as the initial guess in the next frame, and update the cumulative world transformation by matrix multiplication.</p>
+<ol start="5">
+<li><strong>Preparing for next frame</strong></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>self<span style="color:#f92672">.</span>_target_state <span style="color:#f92672">=</span> (downsampled, kd_tree)
+</span></span></code></pre></div><p>I update the cached target state with the current cloud to use it as the target in the next iteration.</p>
+<h3 id="why-does-this-implementation-works-so-well">Why does this implementation works so well?</h3>
+<p>This implementation of odometry on GICP using KD-tree has proven to be an efficient method in my testing for several reasons:</p>
+<ol>
+<li>
+<p><strong>Efficient data structures</strong>: As all tree in computer science, the data structure enables $O(\log n)$ nearest neighbor searches rather than $O(n)$ brute force comparison, making real-time processing possible even with dense point clouds.</p>
+</li>
+<li>
+<p><strong>Voxel downsampling</strong>: Reducing the point cloud density through oxelization preserves structural information while dramatically reducing computation time.</p>
+</li>
+<li>
+<p><strong>Multi-threading</strong>:  Utilizing parallel processing for both preprocessing (downsampling and KD-tree construction) and alignemnt accelerates the most computationally intensive operations.</p>
+</li>
+<li>
+<p><strong>Warn starting</strong>: Using the previosu transformation as an intial guess significantly speeds up convergence and improves robustness when vehicle motion is relatively smooth.</p>
+</li>
+<li>
+<p><strong>Transformation composition</strong>: Properly composing transformation maintains a consistent global reference frame throughout that trajectory.</p>
+</li>
+</ol>
+<p>I had tried with other alignment approaches that caused me no short of headache on the great number of parameters to fine-tune, the dissapointing low number of inliers after certain frame, or ever inceasing error with more inbound frames. In contrast, this setup of having GICP working with KD-tree strikes a decent balance between computation speed and accuracy, making it viable for real-time odometry as we have discussed so far.</p>
+<h1 id="challenges-faced">Challenges faced</h1>
+<p>I only want to limit my discussion on the implementation and testing aspects of this application. There is always a tradeoff bewteen keeping the number of frame-wise points low and manageable enough to take care of the computation efficiency while also have enough points to do a meaningful frame-to-frame or map-to-frame alignment. I picked the voxel size of 0.5 to be a reasonable number to balance both factors.</p>
+<p>And inevitably with the mentioned constraints, the odometry can get as good as it can get with a catch: there is more notieable of a position drifting the longer the vehicle moves. An assistance is needed to &ldquo;fix&rdquo; the traversed trajectory locally to&hellip;put the right poses back to their places. To achieve so, there are a couple of maneuvres at our disposal, such as involve a second sensor (an IMU, GPS or camera) reading as an extra source of reference to do the correction via Bayesian filtering, or consider registering the estimated poses in a pose graph and do some local and global bundle adjustments to refine the trajectories and estimated poses.</p>
+<p>Additionally, tere are around 5 occasions in the dataset that a loop closure can be detected and taken advantage of to refine the trajectory. If the loop closure is applied, the overall pose estimation would be greatly improved.</p>
+<h1 id="results">Results</h1>
+<p>Despite of the points I mentioned in the section &ldquo;Challenges found&rdquo;, the result is aleady quite impressive that by just running the scan-matching on a frame-by-frame basis the estimated poses and the rendered map are already reasonably aligned and correct. For the actual result, please refer to Figure 2.</p>
+<p><img src="/images/area-SLAM-knowledge/small_gicp_kitti_velodyne_full_map.jpeg" alt="GICP KITTI Velodyne estimated global map">
+<em>Figure 2. The KITTI Velodyne dataset recorded on various streets at the city of Karlsruhe. The estimated trajectory and the global map are drawn directly with the result of the odometry estimation alone.</em></p>
+<p>There will be a demo video coming up soon.</p>
+<h1 id="lessons-learned">Lessons learned</h1>
+<p>The practicality of designing and implementing an odometry factors in the available sensors and the quality of the gathered sensor data, what are the physical limitations of the sensor (I can go on for another hour on 3D LiDAR. No worries. Article coming soon), the tradeoff between achieving real-time computation efficiency vs the required accuracy on the estimated poses, and how much computation power can a platform provide. In addition, we can also consider whether it is viable to do a sensor fusion to increase the estimation accuracy or to optimize the algorithm based on actual business needs to fine-tune the odometry and SLAM pipeline to achieve the best performance under the existing physical and computational constraints.</p>
+<h1 id="next-steps">Next steps</h1>
+<p>This is just the beginning. As mention at the beginning of the article, there are several steps to take in order to make it into a formidable SLAM application:</p>
+<ol>
+<li>Odometry (Done but can keep trying other appraocches)</li>
+<li>Introduce ground truth and benchmark with RMSE and other metrics</li>
+<li>(local and global) Pose optimization</li>
+<li>Implement Loop closure</li>
+<li>Port the code to C++</li>
+<li>Scale up the code to take on different datasets</li>
+<li>Run performance profiling to pin-point and eliminate bottle-neck</li>
+</ol>
+<h1 id="conclusion">Conclusion</h1>
+<p>This article presents my implementation of a basic odometry that sereves as future foundation for a SLAM pipeline. Apart from walking through the different parts of the odometry, I also discussed the challenges and propositions to improve the current performance of the odometry. Hopefully this article helps you in your implementation or engages your curiousity and passion about this area of robotics.</p>
+<h1 id="references">References</h1>
+<ul>
+<li>[1] <a href="https://en.wikipedia.org/wiki/Odometry">Odometry - Wikipedia</a></li>
+<li>[2] Geiger, Andreas, Philip Lenz, and Raquel Urtasun. &ldquo;Are we ready for autonomous driving? the kitti vision benchmark suite.&rdquo; 2012 IEEE conference on computer vision and pattern recognition. IEEE, 2012.</li>
+</ul>
+
+    </div>
+    <div class="post-footer">
+      
+
+      <script src="https://utteranc.es/client.js"
+        repo="megacephalo/megacephalo.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

@@ -6,8 +6,15 @@
     <description>Recent content on Megacephalo&#39;s Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 08 Feb 2025 12:49:57 -0800</lastBuildDate>
+    <lastBuildDate>Tue, 18 Mar 2025 23:18:13 -0700</lastBuildDate>
     <atom:link href="https://megacephalo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building my first 3D LiDAR odometry: Lessons from the ground up</title>
+      <link>https://megacephalo.github.io/posts/area-slam-knowledge/implement_a_basic_odometry_pipeline/</link>
+      <pubDate>Tue, 18 Mar 2025 23:18:13 -0700</pubDate>
+      <guid>https://megacephalo.github.io/posts/area-slam-knowledge/implement_a_basic_odometry_pipeline/</guid>
+      <description>&lt;p&gt;Have you wonder once, &amp;ldquo;Well, I have read through so many papers, taken so many courses related to SLAM and localization but somehow I am still not sure how to implement the whole code base myself.&amp;rdquo;. If you had this thought once during your learning process, then you are not alone, my friend. Today I will share my experience of how I had tackled this dilemma myself after years and years and comprehending how pose estimation and SLAM actually works despite how many literature I had gone throughout all this time.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>How to reate a memory safe cross platform plugin with C&#43;&#43;</title>
       <link>https://megacephalo.github.io/posts/area-software-design/how_to_reate_a_memory_safe_cross_platform_plugin/</link>

@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Navigation on Megacephalo&#39;s Tech Blog</title>
-    <link>http://localhost:1313/tags/navigation/</link>
+    <link>https://megacephalo.github.io/tags/navigation/</link>
     <description>Recent content in Navigation on Megacephalo&#39;s Tech Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 12 Jan 2025 23:17:09 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/navigation/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 18 Mar 2025 23:18:13 -0700</lastBuildDate>
+    <atom:link href="https://megacephalo.github.io/tags/navigation/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Knowledge and implementation of SLAM</title>
-      <link>http://localhost:1313/posts/area-slam-knowledge/knowledge_and_implementation_of_slam/</link>
-      <pubDate>Sun, 12 Jan 2025 23:17:09 +0800</pubDate>
-      <guid>http://localhost:1313/posts/area-slam-knowledge/knowledge_and_implementation_of_slam/</guid>
-      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;This article kicks off the series about my understanding and implementations of Simultaneous Localization and Mapping (SLAM) system and algorithms. This series of articles serves as the academic foundation for the Sphero RVR+ side project. Hopefully I can wrap everything up and an organized and clear-to-understand way.&lt;/p&gt;&#xA;&lt;h1 id=&#34;table-of-contents&#34;&gt;Table of Contents&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;foundamentals-of-slam&#34;&gt;&lt;a href=&#34;&#34;&gt;Foundamentals of SLAM&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;main-schools-of-slam&#34;&gt;&lt;a href=&#34;&#34;&gt;Main schools of SLAM&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;scan-matching&#34;&gt;Scan matching&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;iterative-closest-point-icp&#34;&gt;&lt;a href=&#34;&#34;&gt;Iterative Closest Point, ICP&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;random-sample-consensus-ransac&#34;&gt;&lt;a href=&#34;&#34;&gt;Random Sample Consensus RANSAC&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;normal-distribution-transform-ndt&#34;&gt;&lt;a href=&#34;&#34;&gt;Normal Distribution Transform, NDT&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;stochastic-approach---bayesian-based&#34;&gt;&lt;a href=&#34;&#34;&gt;Stochastic approach - Bayesian-based&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;probabilistic-state-estimation&#34;&gt;&lt;a href=&#34;&#34;&gt;Probabilistic state estimation&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;the-kalman-filter-family&#34;&gt;&lt;a href=&#34;&#34;&gt;the Kalman filter family&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;pose-graph-based&#34;&gt;&lt;a href=&#34;&#34;&gt;Pose-graph based&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;vision-based-slam&#34;&gt;&lt;a href=&#34;&#34;&gt;Vision based SLAM&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;2d-lidar-based-slam&#34;&gt;&lt;a href=&#34;&#34;&gt;2D LiDAR based SLAM&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;3d-lidar-based-slam&#34;&gt;&lt;a href=&#34;&#34;&gt;3D LiDAR based SLAM&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;loop-closure&#34;&gt;&lt;a href=&#34;&#34;&gt;Loop closure&lt;/a&gt;&lt;/h4&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h4 id=&#34;some-existing-projects&#34;&gt;Some existing projects&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;h5 id=&#34;kiss-icp-2023&#34;&gt;&lt;a href=&#34;&#34;&gt;Kiss-ICP (2023)&lt;/a&gt;&lt;/h5&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;h5 id=&#34;small-gicp&#34;&gt;&lt;a href=&#34;&#34;&gt;Small GICP&lt;/a&gt;&lt;/h5&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+      <title>Building my first 3D LiDAR odometry: Lessons from the ground up</title>
+      <link>https://megacephalo.github.io/posts/area-slam-knowledge/implement_a_basic_odometry_pipeline/</link>
+      <pubDate>Tue, 18 Mar 2025 23:18:13 -0700</pubDate>
+      <guid>https://megacephalo.github.io/posts/area-slam-knowledge/implement_a_basic_odometry_pipeline/</guid>
+      <description>&lt;p&gt;Have you wonder once, &amp;ldquo;Well, I have read through so many papers, taken so many courses related to SLAM and localization but somehow I am still not sure how to implement the whole code base myself.&amp;rdquo;. If you had this thought once during your learning process, then you are not alone, my friend. Today I will share my experience of how I had tackled this dilemma myself after years and years and comprehending how pose estimation and SLAM actually works despite how many literature I had gone throughout all this time.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
